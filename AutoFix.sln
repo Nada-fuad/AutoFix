@@ -3,8 +3,64 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35527.113 d17.12
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{20FB2166-661C-4EE4-B44F-426A97570045}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{B3435633-355C-4463-BC35-7F0C80D3F631}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoFix.Api", "src\AutoFix.Api\AutoFix.Api.csproj", "{9A9A1D4C-6E2E-4966-8241-4ABE6B65BFD6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoFix.Domain", "src\AutoFix.Domain\AutoFix.Domain.csproj", "{07546206-E632-4AD2-86B7-9C26EF75B8CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoFix.Infrastructure", "src\AutoFix.Infrastructure\AutoFix.Infrastructure.csproj", "{3261DB2A-D41B-4EDC-AFAD-4ED28BA2113A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoFix.Application", "src\AutoFix.Application\AutoFix.Application.csproj", "{9641F32C-2EF2-4402-B0C8-CD0D0D123882}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoFix.Contracts", "src\AutoFix.Contracts\AutoFix.Contracts.csproj", "{396C3B9F-1C76-4033-A360-42B6141EDA9A}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "autofix.client", "src\AutoFix.Client\autofix.client.esproj", "{624A24C7-78FA-4A63-83AA-79685A8C7D5B}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9A9A1D4C-6E2E-4966-8241-4ABE6B65BFD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A9A1D4C-6E2E-4966-8241-4ABE6B65BFD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A9A1D4C-6E2E-4966-8241-4ABE6B65BFD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A9A1D4C-6E2E-4966-8241-4ABE6B65BFD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07546206-E632-4AD2-86B7-9C26EF75B8CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07546206-E632-4AD2-86B7-9C26EF75B8CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07546206-E632-4AD2-86B7-9C26EF75B8CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07546206-E632-4AD2-86B7-9C26EF75B8CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3261DB2A-D41B-4EDC-AFAD-4ED28BA2113A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3261DB2A-D41B-4EDC-AFAD-4ED28BA2113A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3261DB2A-D41B-4EDC-AFAD-4ED28BA2113A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3261DB2A-D41B-4EDC-AFAD-4ED28BA2113A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9641F32C-2EF2-4402-B0C8-CD0D0D123882}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9641F32C-2EF2-4402-B0C8-CD0D0D123882}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9641F32C-2EF2-4402-B0C8-CD0D0D123882}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9641F32C-2EF2-4402-B0C8-CD0D0D123882}.Release|Any CPU.Build.0 = Release|Any CPU
+		{396C3B9F-1C76-4033-A360-42B6141EDA9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{396C3B9F-1C76-4033-A360-42B6141EDA9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{396C3B9F-1C76-4033-A360-42B6141EDA9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{396C3B9F-1C76-4033-A360-42B6141EDA9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{624A24C7-78FA-4A63-83AA-79685A8C7D5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{624A24C7-78FA-4A63-83AA-79685A8C7D5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{624A24C7-78FA-4A63-83AA-79685A8C7D5B}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{624A24C7-78FA-4A63-83AA-79685A8C7D5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{624A24C7-78FA-4A63-83AA-79685A8C7D5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{624A24C7-78FA-4A63-83AA-79685A8C7D5B}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9A9A1D4C-6E2E-4966-8241-4ABE6B65BFD6} = {20FB2166-661C-4EE4-B44F-426A97570045}
+		{07546206-E632-4AD2-86B7-9C26EF75B8CE} = {20FB2166-661C-4EE4-B44F-426A97570045}
+		{3261DB2A-D41B-4EDC-AFAD-4ED28BA2113A} = {20FB2166-661C-4EE4-B44F-426A97570045}
+		{9641F32C-2EF2-4402-B0C8-CD0D0D123882} = {20FB2166-661C-4EE4-B44F-426A97570045}
+		{396C3B9F-1C76-4033-A360-42B6141EDA9A} = {20FB2166-661C-4EE4-B44F-426A97570045}
+		{624A24C7-78FA-4A63-83AA-79685A8C7D5B} = {20FB2166-661C-4EE4-B44F-426A97570045}
 	EndGlobalSection
 EndGlobal
