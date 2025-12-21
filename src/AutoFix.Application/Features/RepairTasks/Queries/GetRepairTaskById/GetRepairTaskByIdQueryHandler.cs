@@ -1,0 +1,37 @@
+using AutoFix.Application.Common.Errors;
+using AutoFix.Application.Common.Interfaces;
+using AutoFix.Application.Features.RepairTasks.Dtos;
+using AutoFix.Application.Features.RepairTasks.Mappers;
+using AutoFix.Domain.Common.Results;
+
+using MediatR;
+
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+
+namespace AutoFix.Application.Features.RepairTasks.Queries.GetRepairTaskById;
+
+public class GetRepairTaskByIdQueryHandler(
+    ILogger<GetRepairTaskByIdQueryHandler> logger,
+    IAppDbContext context
+    )
+    : IRequestHandler<GetRepairTaskByIdQuery, Result<RepairTaskDto>>
+{
+    private readonly ILogger<GetRepairTaskByIdQueryHandler> _logger = logger;
+    private readonly IAppDbContext _context = context;
+
+    public async Task<Result<RepairTaskDto>> Handle(GetRepairTaskByIdQuery query, CancellationToken ct)
+    {
+        var repairTask = await _context.RepairTasks.AsNoTracking().Include(c => c.Parts)
+                                     .FirstOrDefaultAsync(c => c.Id == query.RepairTaskId, ct);
+
+        if (repairTask is null)
+        {
+            _logger.LogWarning("Repair task with id {RepairTaskId} was not found", query.RepairTaskId);
+
+            return ApplicationErrors.RepairTaskNotFound;
+        }
+
+        return repairTask.ToDto();
+    }
+}
