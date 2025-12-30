@@ -1,0 +1,30 @@
+@baseUrl=https://localhost:7211
+
+
+POST {{baseUrl}}/api/customers
+Content-Type: application/json
+
+{
+    "name":"Ahmed Ali",
+    "PhoneNumber":"445566777",
+    "email":"ahmed@gmail.com"
+}
+####
+
+GET {{baseUrl}}/api/customers/4325ea5f-0033-4ea0-9fb9-ae8229bf1c2c
+
+####
+DELETE {{baseUrl}}/api/customers/e68d28b8-6bd0-4864-adfe-dbbe82858efe
+
+
+
+####
+PUT {{baseUrl}}/api/cutomers/4325ea5f-0033-4ea0-9fb9-ae8229bf1c2c
+Content-Type: application/json
+
+
+{
+    "name": "Mohammed salah",
+  "email": "400045566777",
+  "phoneNumber": "aaaaaaaahmed@gmail.com"
+}
