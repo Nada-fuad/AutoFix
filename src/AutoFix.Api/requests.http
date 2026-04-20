@@ -1,12 +1,37 @@
 # For more info on HTTP files go to https://aka.ms/vs/httpfile
-@baseUrl="https://localhost:7291"
-
+@baseUrl=https://localhost:7291
 
 POST {{baseUrl}}/api/customers
+Content-Type: application/json
 {
    "name":"ahmed",
    "email":"abeds@gmail.com",
-   "phoneNumber":"0000055",
+   "phoneNumber":"055"
+
+
+}
+
+######
+
+POST {{baseUrl}}/api/customers
+Content-Type: application/json
+{
+   "name":"ali",
+   "email":"ali@gmail.com",
+   "phoneNumber":"5999988775"
+
+
+}
+######
+
+
+PUT {{baseUrl}}/api/customers/1fc7292d-a37d-4113-a0c5-2a74c99e2f75
+Content-Type: application/json
+
+{
+   "name":"alimohammed",
+   "email":"ali@gmail.com",
+   "phoneNumber":"5999988775"
 
 
 }
