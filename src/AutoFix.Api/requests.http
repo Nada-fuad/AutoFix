@@ -35,3 +35,7 @@ Content-Type: application/json
 
 
 }
+
+###
+
+DELETE {{baseUrl}}/api/customers/1fc7292d-a37d-4113-a0c5-2a74c99e2f75

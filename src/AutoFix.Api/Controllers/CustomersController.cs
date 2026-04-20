@@ -1,4 +1,5 @@
 ﻿using AutoFix.Application.Features.Customers.Commands.CreateCustomer;
+using AutoFix.Application.Features.Customers.Commands.DeleteCustomer;
 using AutoFix.Application.Features.Customers.Commands.UpdateCustomer;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -40,6 +41,21 @@ namespace AutoFix.Api.Controllers
             {
                 return BadRequest(result.Errors);
             }
+            return Ok(result.Value);
+
+        }
+
+
+        [HttpDelete("{id:guid}")]
+
+
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var command = new RemoveCustomerCommand(id);
+
+            var result = await _mediator.Send(command);
+
+
             return Ok(result.Value);
 
         }
