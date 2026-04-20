@@ -10,4 +10,13 @@
     <ProjectReference Include="..\AutoFix.Domain\AutoFix.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\Customers\Queries\" />
+  </ItemGroup>
+
 </Project>

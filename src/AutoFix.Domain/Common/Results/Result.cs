@@ -21,7 +21,7 @@ namespace AutoFix.Domain.Common.Results
     {
         public TValue Value => IsSuccess ? _value! : default!;
 
-        public List<Error> Errors => IsError?_errors!:[];
+        public List<Error> Errors => IsError?_errors!:new List<Error>();
 
 
         public Error TopError => (_errors?.Count > 0) ? _errors[0] : default;
@@ -41,7 +41,7 @@ namespace AutoFix.Domain.Common.Results
             }
             else
             {
-                if (errors.Count == 0 || errors = null)
+                if (errors is null || errors.Count == 0  )
                 {
                     throw new ArgumentException("Provide at least one error.", nameof(errors));
                 }
