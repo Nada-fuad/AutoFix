@@ -5,11 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoFix.Application.Common.Interfaces;
 using AutoFix.Domain.Customers;
+using AutoFix.Infrastructure.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace AutoFix.Infrastructure.Data.Persistence
 {
-    public class AppDbContext : DbContext, IAppDbContext
+    public class AppDbContext : IdentityDbContext<AppUser>, IAppDbContext
     {
 
 
