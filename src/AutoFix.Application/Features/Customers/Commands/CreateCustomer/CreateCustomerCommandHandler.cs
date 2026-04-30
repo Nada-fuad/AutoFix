@@ -8,6 +8,7 @@ using AutoFix.Application.Features.Customers.Dtos;
 using AutoFix.Application.Features.Customers.Mappers;
 using AutoFix.Domain.Common.Results;
 using AutoFix.Domain.Customers;
+using AutoFix.Domain.Customers.Vehicles;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -32,7 +33,22 @@ namespace AutoFix.Application.Features.Customers.Commands.CreateCustomer
 
                 return CustomerErrors.CustomerExists;
             }
-            var createCustomerResult = Customer.Create(Guid.NewGuid(),   command.name.Trim(), command.email.Trim(), command.phoneNumber.Trim());
+
+            List<Vehicle> vehicles = [];
+
+            foreach(var v in command.Vehicles)
+            {
+                var vehicleResult = Vehicle.Create(Guid.NewGuid(), v.Make, v.Model, v.Year, v.LicensePlate);
+
+                if (vehicleResult.IsError)
+                {
+                    return vehicleResult.Errors;
+                }
+
+                vehicles.Add(vehicleResult.Value);
+            }
+
+            var createCustomerResult = Customer.Create(Guid.NewGuid(),   command.name.Trim(), command.email.Trim(), command.phoneNumber.Trim(), vehicles);
 
             if (createCustomerResult.IsError)
             {

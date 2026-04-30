@@ -20,7 +20,20 @@ namespace AutoFix.Application.Features.Customers.Mappers
                 Id = customer.Id,
                 Name = customer.Name,
                 Email = customer.Email,
-                PhoneNumber = customer.PhoneNumber
+                PhoneNumber = customer.PhoneNumber,
+
+                Vehicles=customer.Vehicles.Select(v=>new VehicleDto(
+
+                      v.Id,
+                   v.Make,
+                    v.Model,
+                  v.Year,
+                     v.LicensePlate
+                    )
+
+                
+                   
+                ).ToList()
             };
 
         }

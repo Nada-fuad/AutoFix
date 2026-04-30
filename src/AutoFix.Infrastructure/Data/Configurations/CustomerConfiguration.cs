@@ -1,27 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoFix.Domain.Customers;
+﻿using AutoFix.Domain.Customers;
+using AutoFix.Domain.Customers.Vehicles;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace AutoFix.Infrastructure.Data.Configurations
+namespace AutoFix.Infrastructure.Data.Configurations;
+
+public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
 {
-    public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
+    public void Configure(EntityTypeBuilder<Customer> builder)
     {
-        public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<Customer> builder)
-        {
-            builder.HasKey(x => x.Id);
+        builder.HasKey(c => c.Id);
 
-            builder.Property(x => x.Name).IsRequired().HasMaxLength(100);
+        builder.Property(c => c.Name)
+            .IsRequired()
+            .HasMaxLength(150);
 
-            builder.Property(x=>x.Email).IsRequired().HasMaxLength(100);
+        builder.Property(c => c.Email)
+            .HasMaxLength(150);
 
-            builder.Property(x=>x.PhoneNumber).IsRequired().HasMaxLength(100);
+        builder.Property(c => c.PhoneNumber)
+            .IsRequired()
+            .HasMaxLength(20);
 
+       
 
-            builder.HasIndex(x => x.Email).IsUnique();
-        }
+        builder.Navigation(c => c.Vehicles)
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
     }
 }

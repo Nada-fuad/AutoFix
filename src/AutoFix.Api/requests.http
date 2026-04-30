@@ -1,6 +1,5 @@
 # For more info on HTTP files go to https://aka.ms/vs/httpfile
-@baseUrl=https://localhost:7291
-
+@baseUrl= https://localhost:7291
 POST {{baseUrl}}/api/customers
 Content-Type: application/json
 {
@@ -15,12 +14,25 @@ Content-Type: application/json
 
 POST {{baseUrl}}/api/customers
 Content-Type: application/json
+
 {
-   "name":"ali",
-   "email":"ali@gmail.com",
-   "phoneNumber":"5999988775"
-
-
+  "name": "ali3",
+  "email": "ali3@gmail.com",
+  "phoneNumber": "5999988775",
+  "vehicles": [
+    {
+      "make": "Toyota",
+      "model": "Camry",
+      "year": 2020,
+      "licensePlate": "ABC123"
+    },
+    {
+      "make": "BMW",
+      "model": "X5",
+      "year": 2022,
+      "licensePlate": "XYZ999"
+    }
+  ]
 }
 ######
 
@@ -67,3 +79,5 @@ Content-Type: application/json
   "email": "test@test.com",
   "password": "Test123"
 }
+
+

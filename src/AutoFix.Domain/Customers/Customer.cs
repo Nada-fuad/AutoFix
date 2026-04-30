@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AutoFix.Domain.Common;
 using AutoFix.Domain.Common.Results;
+using AutoFix.Domain.Customers.Vehicles;
 
 namespace AutoFix.Domain.Customers
 {
@@ -18,18 +19,20 @@ namespace AutoFix.Domain.Customers
 
         public string? Email { get; private set; }
 
-
+        private readonly List<Vehicle> _vehicles = [];
+        public IEnumerable<Vehicle> Vehicles => _vehicles.AsReadOnly();
         private Customer() { }
-        private Customer(Guid id,string name,string email,string phoneNumber):base(id) {
+        private Customer(Guid id,string name,string email,string phoneNumber, List<Vehicle> vehicles) : base(id) {
         
             Name = name;    
             Email = email;
             PhoneNumber = phoneNumber;
+            _vehicles = vehicles;
         
         
         }
 
-        public static Result<Customer> Create(Guid id,string name, string email, string phoneNumber)
+        public static Result<Customer> Create(Guid id,string name, string email, string phoneNumber, List<Vehicle> vehicles)
         {
             if(string.IsNullOrWhiteSpace(name)) { return CustomerErrors.NameRequired; }
             if (string.IsNullOrWhiteSpace(email)) {  return CustomerErrors.EmailRequired; }
@@ -47,8 +50,7 @@ namespace AutoFix.Domain.Customers
            
 
 
-
-            return new Customer(id, name, email, phoneNumber);
+            return new Customer(id, name, email, phoneNumber, vehicles);
         }
 
 

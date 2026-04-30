@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoFix.Application.Features.Customers.Dtos;
 using AutoFix.Domain.Common.Results;
-using AutoFix.Domain.Customers.Vehicles;
 using MediatR;
 
 namespace AutoFix.Application.Features.Customers.Commands.CreateCustomer
 {
-    public sealed record  CreateCustomerCommand(string name,string email,string phoneNumber,List<CreateVehicleCommand>  Vehicles) :IRequest<Result<CustomerDto>>;
-    
+    public sealed record CreateVehicleCommand(string Make, string Model,int Year, string LicensePlate):IRequest<Result<VehicleDto>>
+    {
+    }
 }
