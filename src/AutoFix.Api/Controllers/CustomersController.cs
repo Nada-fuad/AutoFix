@@ -1,6 +1,8 @@
 ﻿using AutoFix.Application.Features.Customers.Commands.CreateCustomer;
 using AutoFix.Application.Features.Customers.Commands.DeleteCustomer;
 using AutoFix.Application.Features.Customers.Commands.UpdateCustomer;
+using AutoFix.Application.Features.Customers.Queries.GetCustomerById;
+using AutoFix.Application.Features.Customers.Queries.GetCustomers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,12 +32,12 @@ namespace AutoFix.Api.Controllers
 
         [HttpPut("{id:guid}")]
 
-        public async Task<IActionResult> Update(Guid id,[FromBody]UpdateCustomerCommand command)
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateCustomerCommand command)
         {
 
 
 
-            var updatedCommand= command with { CustomerId = id };
+            var updatedCommand = command with { CustomerId = id };
             var result = await _mediator.Send(updatedCommand);
             if (result.IsError)
             {
@@ -58,6 +60,28 @@ namespace AutoFix.Api.Controllers
 
             return Ok(result.Value);
 
+        }
+
+        [HttpGet]
+
+        public async Task<IActionResult> GetCustomers()
+        {
+            var customers = await _mediator.Send(new GetCustomersQuery());
+
+            return Ok(customers);
+        }
+
+        [HttpGet("{id:guid}")]
+
+        public async Task<IActionResult> GetCustomerById(Guid id)
+        {
+            var customer=await _mediator.Send(new GetCustomerByIdQuery(id));
+
+            if (customer.IsError)
+            {
+                return NotFound();
+            }
+            return Ok(customer.Value);
         }
     }
 }
