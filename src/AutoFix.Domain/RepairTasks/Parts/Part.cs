@@ -1,0 +1,70 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using AutoFix.Domain.Common;
+using AutoFix.Domain.Common.Results;
+
+namespace AutoFix.Domain.RepairTasks.Parts
+{
+   public class Part:AuditableEntity
+    {
+
+        public string? Name { get; private set; }
+        public decimal Cost { get; private set; }
+        public int Quantity { get; private set; }
+        public Part() { }
+
+        public Part(Guid id ,string name, decimal cost , int quantity):base(id)
+        {
+            Name = name;
+            Cost = cost;
+            Quantity = quantity;
+
+        }
+
+        public static Result<Part> Create(Guid id,string name, decimal cost, int quantity)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return PartErrors.NameRquired;
+            }
+            if (cost <= 0 || cost > 10000)
+            {
+                return PartErrors.CostInvalid;
+            }
+            if (quantity <= 0 || quantity > 10)
+            {
+                return PartErrors.QuantityInvalid;
+            }
+
+            return new Part( id ,name, cost, quantity);
+        }
+
+
+        public  Result<Updated> Update(string name, decimal cost, int quantity)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return PartErrors.NameRquired;
+            }
+            if (cost <= 0 || cost > 10000)
+            {
+                return PartErrors.CostInvalid;
+            }
+            if (quantity <= 0 || quantity > 10)
+            {
+                return PartErrors.QuantityInvalid;
+            }
+
+            Name = name;
+            Cost = cost;
+            Quantity = quantity;
+            return Result.Updated;
+
+        }
+
+
+    }
+}

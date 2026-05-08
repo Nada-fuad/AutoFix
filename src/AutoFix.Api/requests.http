@@ -80,4 +80,97 @@ Content-Type: application/json
   "password": "Test123"
 }
 
+###
+GET {{baseUrl}}/api/customers
+
+####
+GET {{baseUrl}}/api/customers
+
+
+####
+GET {{baseUrl}}/api/customers/9bfc03c3-40af-4438-ba8b-e9084e1f89b2
+
+
+
+####
+POST {{baseUrl}}/api/repairtask
+Content-Type: application/json
+
+{
+    "name":"oil change",
+    "Laborcost":2,
+    "EstimatedDurationInMins":15
+}
+
+
+####
+POST {{baseUrl}}/api/repairtask
+Content-Type: application/json
+{
+  "name": "Oil Change",
+  "laborCost": 100,
+  "estimatedDurationInMins": 30,
+  "parts": [
+    {
+      "name": "Oil Filter",
+      "cost": 20,
+      "quantity": 1
+    },
+    {
+      "name": "Engine Oil",
+      "cost": 50,
+      "quantity": 2
+    }
+  ]
+}
+
+
+####
+POST {{baseUrl}}/api/repairtask
+Content-Type: application/json
+{
+  "name": "Oil Change",
+  "laborCost": 100,
+  "estimatedDurationInMins": 30,
+  "parts": [
+    {
+      "name": "Oil Bottle",
+      "cost": 20,
+      "quantity": 1
+    }
+    
+  ]
+}
+
+###
+DELETE {{baseUrl}}/api/repairtask/3b4d3ced-5976-4a2c-82e9-3579fedcd4e7
+
+
+###
+PUT {{baseUrl}}/api/repairtask/cbf91b79-35a5-40c8-8302-ef9ec31bc3fb
+Content-Type: application/json
+
+
+{
+  "name": "Oil Full",
+  "estimatedDurationInMins": 30,
+  "laborCost": 90,
+   "parts": [
+    {
+      "name": "Oil Bottle",
+      "cost": 20,
+      "quantity": 1
+    }
+   ]
+}
+
+
+####
+GET {{baseUrl}}/api/repairtask/cbf91b79-35a5-40c8-8302-ef9ec31bc3fb
+
+
+
+
+
+
 

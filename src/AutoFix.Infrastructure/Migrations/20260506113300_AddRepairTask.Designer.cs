@@ -4,6 +4,7 @@ using AutoFix.Infrastructure.Data.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AutoFix.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260506113300_AddRepairTask")]
+    partial class AddRepairTask
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -105,49 +108,10 @@ namespace AutoFix.Infrastructure.Migrations
                     b.ToTable("Vehicles");
                 });
 
-            modelBuilder.Entity("AutoFix.Domain.RepairTasks.Parts.Part", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("Cost")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTimeOffset>("CreatedAtUtc")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("LastModifiedUtc")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("RepairTaskId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
-
-                    b.HasIndex("RepairTaskId");
-
-                    b.ToTable("Parts");
-                });
-
             modelBuilder.Entity("AutoFix.Domain.RepairTasks.RepairTask", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTimeOffset>("CreatedAtUtc")
@@ -170,12 +134,9 @@ namespace AutoFix.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
 
                     b.ToTable("RepairTasks");
                 });
@@ -422,14 +383,6 @@ namespace AutoFix.Infrastructure.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("AutoFix.Domain.RepairTasks.Parts.Part", b =>
-                {
-                    b.HasOne("AutoFix.Domain.RepairTasks.RepairTask", null)
-                        .WithMany("Parts")
-                        .HasForeignKey("RepairTaskId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -484,11 +437,6 @@ namespace AutoFix.Infrastructure.Migrations
             modelBuilder.Entity("AutoFix.Domain.Customers.Customer", b =>
                 {
                     b.Navigation("Vehicles");
-                });
-
-            modelBuilder.Entity("AutoFix.Domain.RepairTasks.RepairTask", b =>
-                {
-                    b.Navigation("Parts");
                 });
 #pragma warning restore 612, 618
         }

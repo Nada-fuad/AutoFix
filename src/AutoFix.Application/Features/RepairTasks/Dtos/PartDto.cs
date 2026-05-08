@@ -1,0 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace AutoFix.Application.Features.RepairTasks.Dtos
+{
+  
+        public class PartDto
+        {
+            public Guid PartId { get; set; }
+            public string Name { get; set; } = string.Empty;
+            public decimal Cost { get; set; }
+            public int Quantity { get; set; }
+        }
+    
+}

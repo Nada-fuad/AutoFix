@@ -4,6 +4,7 @@ using AutoFix.Infrastructure.Data.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AutoFix.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260506172818_AddRepairTaskConfiguration")]
+    partial class AddRepairTaskConfiguration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -148,6 +151,7 @@ namespace AutoFix.Infrastructure.Migrations
             modelBuilder.Entity("AutoFix.Domain.RepairTasks.RepairTask", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTimeOffset>("CreatedAtUtc")
@@ -170,12 +174,9 @@ namespace AutoFix.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
 
                     b.ToTable("RepairTasks");
                 });
@@ -426,8 +427,7 @@ namespace AutoFix.Infrastructure.Migrations
                 {
                     b.HasOne("AutoFix.Domain.RepairTasks.RepairTask", null)
                         .WithMany("Parts")
-                        .HasForeignKey("RepairTaskId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("RepairTaskId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
