@@ -4,7 +4,9 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using AutoFix.Application.Common.Behaviours;
 using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AutoFix.Application
@@ -17,6 +19,7 @@ namespace AutoFix.Application
 
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
             services.AddValidatorsFromAssembly((typeof(DependencyInjection).Assembly));
+            services.AddTransient(typeof(IPipelineBehavior<,>),typeof(ValidationBehavior<,>));
             return services;
         }
     }

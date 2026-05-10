@@ -8,7 +8,7 @@ namespace AutoFix.Domain.Common
 {
     public abstract class Entity
     {
-        public Guid Id { get;  }
+        public Guid Id { get; private set; }
 
         private readonly List<DomainEvent> _domainEvents = [];
         protected Entity() { }

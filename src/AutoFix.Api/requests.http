@@ -1,14 +1,16 @@
 # For more info on HTTP files go to https://aka.ms/vs/httpfile
 @baseUrl= https://localhost:7291
-POST {{baseUrl}}/api/customers
-Content-Type: application/json
-{
-   "name":"ahmed",
-   "email":"abeds@gmail.com",
-   "phoneNumber":"055"
 
 
-}
+
+####
+GET {{baseUrl}}/api/customers
+
+
+####
+GET {{baseUrl}}/api/customers/9bfc03c3-40af-4438-ba8b-e9084e1f89b2
+
+
 
 ######
 
@@ -17,7 +19,7 @@ Content-Type: application/json
 
 {
   "name": "ali3",
-  "email": "ali7@gmail.com",
+  "email": "ali86@gmail.com",
   "phoneNumber": "5999988775",
   "vehicles": [
     {
@@ -37,13 +39,20 @@ Content-Type: application/json
 ######
 
 
-PUT {{baseUrl}}/api/customers/1fc7292d-a37d-4113-a0c5-2a74c99e2f75
+PUT {{baseUrl}}/api/customers/4071c843-29f9-4450-8f77-b0d640bc743f
 Content-Type: application/json
 
 {
    "name":"alimohammed",
    "email":"ali@gmail.com",
-   "phoneNumber":"5999988775"
+   "phoneNumber":"5999988775",
+   "vehicles": [
+    {
+      "make": "Toyota",
+      "model": "Camry",
+      "year": 2020,
+      "licensePlate": "ABC123"
+    }]
 
 
 }
@@ -80,15 +89,7 @@ Content-Type: application/json
   "password": "Test123"
 }
 
-###
-GET {{baseUrl}}/api/customers
 
-####
-GET {{baseUrl}}/api/customers
-
-
-####
-GET {{baseUrl}}/api/customers/9bfc03c3-40af-4438-ba8b-e9084e1f89b2
 
 
 
@@ -126,7 +127,7 @@ Content-Type: application/json
 
 
 ####
-POST {{baseUrl}}/api/repairtask
+POST {{baseUrl}}/api/repairtasks
 Content-Type: application/json
 {
   "name": "Oil Change",
@@ -169,8 +170,23 @@ Content-Type: application/json
 GET {{baseUrl}}/api/repairtask/cbf91b79-35a5-40c8-8302-ef9ec31bc3fb
 
 
+####
+GET {{baseUrl}}/api/repairtasks
 
 
+
+####
+POST {{baseUrl}}/api/workorders
+Content-Type: application/json
+
+{
+    "vehicleId":"0e44902e-41d1-47e8-a568-d756bfd5cdc6",
+    "startAtUtc":"2026-05-09T10:00:00Z",
+    "repairTaskIds":["b6a13520-1274-4efe-80d0-0fd2c6612a67",
+    "de7a2cfc-3f41-4b98-aac3-2f9529597f7b"]
+       
+    
+}
 
 
 

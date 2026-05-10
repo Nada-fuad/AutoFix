@@ -13,12 +13,12 @@ namespace AutoFix.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RepairTaskController : ControllerBase
+    public class RepairTasksController : ControllerBase
     {
 
         private readonly IMediator _mediator;
 
-        public RepairTaskController(IMediator mediator)
+        public RepairTasksController(IMediator mediator)
         {
             _mediator = mediator;
         }
