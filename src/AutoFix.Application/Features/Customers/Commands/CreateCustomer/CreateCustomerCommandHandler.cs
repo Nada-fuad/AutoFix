@@ -35,7 +35,7 @@ namespace AutoFix.Application.Features.Customers.Commands.CreateCustomer
             }
 
             List<Vehicle> vehicles = [];
-
+            
             foreach(var v in command.Vehicles)
             {
                 var vehicleResult = Vehicle.Create(Guid.NewGuid(), v.Make, v.Model, v.Year, v.LicensePlate);

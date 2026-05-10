@@ -8,6 +8,6 @@ using MediatR;
 
 namespace AutoFix.Application.Features.Customers.Queries.GetCustomers
 {
-    public record GetCustomersQuery:IRequest<List<CustomerDto>>;
+    public sealed record GetCustomersQuery:IRequest<List<CustomerDto>>;
    
 }

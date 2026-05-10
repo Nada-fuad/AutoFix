@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoFix.Application.Common.Interfaces;
 using AutoFix.Application.Features.Customers.Dtos;
+using AutoFix.Application.Features.Customers.Mappers;
 using AutoFix.Domain.Common.Results;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -18,20 +19,13 @@ namespace AutoFix.Application.Features.Customers.Queries.GetCustomerById
         public async Task<Result<CustomerDto>> Handle(GetCustomerByIdQuery request, CancellationToken cancellationToken)
         {
 
-            var customer = await _context.Customers.FirstOrDefaultAsync(x => x.Id == request.CustomerId,cancellationToken);
+            var customer = await _context.Customers.Include(v=>v.Vehicles).FirstOrDefaultAsync(x => x.Id == request.CustomerId,cancellationToken);
 
             if (customer == null)
             {
                
             }
-            return new CustomerDto
-            {
-
-                Id = customer.Id,
-                Name = customer.Name,
-                Email = customer.Email,
-                PhoneNumber = customer.PhoneNumber
-            };
+            return CustomerMapper.ToDto(customer);
         }
     }
 }

@@ -20,7 +20,7 @@ namespace AutoFix.Domain.Customers
         public string? Email { get; private set; }
 
         private readonly List<Vehicle> _vehicles = [];
-        public IEnumerable<Vehicle> Vehicles => _vehicles.AsReadOnly();
+        public IReadOnlyCollection<Vehicle> Vehicles => _vehicles.AsReadOnly();
         private Customer() { }
         private Customer(Guid id,string name,string email,string phoneNumber, List<Vehicle> vehicles) : base(id) {
         
