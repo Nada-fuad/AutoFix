@@ -11,14 +11,16 @@ using AutoFix.Domain.Customers;
 using AutoFix.Domain.Customers.Vehicles;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Logging;
 
 namespace AutoFix.Application.Features.Customers.Commands.CreateCustomer
 {
-    public sealed class CreateCustomerCommandHandler(IAppDbContext context,ILogger<CreateCustomerCommandHandler> logger) : IRequestHandler<CreateCustomerCommand, Result<CustomerDto>>
+    public sealed class CreateCustomerCommandHandler(IAppDbContext context,ILogger<CreateCustomerCommandHandler> logger,HybridCache cache) : IRequestHandler<CreateCustomerCommand, Result<CustomerDto>>
     {
         private readonly IAppDbContext _context = context;
         private readonly ILogger<CreateCustomerCommandHandler> _logger = logger;
+        private readonly HybridCache _cache = cache;
 
         public async Task<Result<CustomerDto>> Handle(CreateCustomerCommand command, CancellationToken ct)
         {

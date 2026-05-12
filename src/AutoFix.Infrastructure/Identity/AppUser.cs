@@ -7,6 +7,6 @@ using Microsoft.AspNetCore.Identity;
 
 namespace AutoFix.Infrastructure.Identity
 {
-   public class AppUser:IdentityUser;
+   public class AppUser : IdentityUser { }
    
 }

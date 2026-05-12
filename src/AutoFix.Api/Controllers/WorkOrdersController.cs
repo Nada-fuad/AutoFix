@@ -1,5 +1,6 @@
 ﻿using AutoFix.Application.Features.WorkOrders.Commands.CreateWorkOrder;
 using AutoFix.Application.Features.WorkOrders.Commands.UpdateWorkOrder;
+using AutoFix.Application.Features.WorkOrders.Queries.GetWorkOrderByIdQuery;
 using AutoFix.Contracts.Requests.WorkOrders;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -35,6 +36,23 @@ namespace AutoFix.Api.Controllers
             var command= new DeleteWorkOrderCommand(workOrderId);
 
             var result= await _mediator.Send(command);
+            if (result.IsError)
+            {
+                return BadRequest(result.Errors);
+            }
+            return Ok(result.Value);
+
+        }
+
+
+        [HttpGet("{workOrderId:guid}")]
+
+        public async Task<IActionResult> GetById(Guid workOrderId)
+        {
+            var command= new GetWorkOrderByIdQuery(workOrderId);
+
+            var result = await _mediator.Send(command);
+
             if (result.IsError)
             {
                 return BadRequest(result.Errors);

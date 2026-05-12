@@ -188,5 +188,12 @@ Content-Type: application/json
     
 }
 
+####
+DELETE {{baseUrl}}/api/workorders/9d334905-8126-4a0a-beb2-641b03938e92
+
+
+####
+GET {{baseUrl}}/api/workorders/9d334905-8126-4a0a-beb2-641b03938e92h
+
 
 
