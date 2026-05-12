@@ -1,6 +1,7 @@
 ﻿using AutoFix.Application.Features.WorkOrders.Commands.CreateWorkOrder;
 using AutoFix.Application.Features.WorkOrders.Commands.UpdateWorkOrder;
-using AutoFix.Application.Features.WorkOrders.Queries.GetWorkOrderByIdQuery;
+using AutoFix.Application.Features.WorkOrders.Commands.UpdateWorkOrderRepairTasks;
+using AutoFix.Application.Features.WorkOrders.Queries.GetWorkOrderById;
 using AutoFix.Contracts.Requests.WorkOrders;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -60,5 +61,23 @@ namespace AutoFix.Api.Controllers
             return Ok(result.Value);
 
         }
+
+
+        [HttpPut("{workorderId:guid}/repairtasks")]
+
+        public async Task<IActionResult> UpdateRepairTasks(Guid workOrderId,[FromBody]Guid[] repairTaskIds)
+        {
+            var command = new UpdateWorkOrderRepairTasksCommand(workOrderId, repairTaskIds);
+
+            var result = await _mediator.Send(command);
+
+            if (result.IsError)
+            {
+                return BadRequest(result.Errors);
+            }
+            return Ok(result.Value);
+
+        }
+
+        }
     }
-}

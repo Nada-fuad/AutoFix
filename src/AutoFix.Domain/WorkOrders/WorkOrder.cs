@@ -60,6 +60,33 @@ namespace AutoFix.Domain.WorkOrders
         }
 
 
+        public Result<Updated> AddRepairTask(RepairTask repairTask)
+        {
+            if (!IsEditable)
+                return WorkOrderErrors.Readonly;
+
+            if (_repairTasks.Any(r => r.Id == repairTask.Id))
+            {
+                return WorkOrderErrors.RepairTaskAlreadyAdded;
+            }
+
+            _repairTasks.Add(repairTask);
+            return Result.Updated;
+        }
+
+        public Result<Updated> ClearRepairTasks()
+        {
+            if (!IsEditable)
+            {
+                return WorkOrderErrors.Readonly;
+            }
+
+            _repairTasks.Clear();
+
+            return Result.Updated;
+        }
+        public bool IsEditable => State is not (WorkOrderState.Completed or WorkOrderState.Cancelled or WorkOrderState.InProgress);
+
 
     }
 }

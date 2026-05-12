@@ -196,4 +196,18 @@ DELETE {{baseUrl}}/api/workorders/9d334905-8126-4a0a-beb2-641b03938e92
 GET {{baseUrl}}/api/workorders/9d334905-8126-4a0a-beb2-641b03938e92h
 
 
+####
+GET {{baseUrl}}/api/labors
+
+
+###
+PUT {{baseUrl}}/api/workorders/c1e495f7-9037-49a1-b967-d477665f9e0d/repairtasks
+Content-Type: application/json
+
+
+{
+  "repairTasksIds": ["b6a13520-1274-4efe-80d0-0fd2c6612a67","de7a2cfc-3f41-4b98-aac3-2f9529597f7b"]
+}
+
+
 

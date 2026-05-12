@@ -12,5 +12,17 @@ namespace AutoFix.Application.Common.Errors
         public static Error WorkOrderNotFound=> Error.NotFound(
            "ApplicationErrors.WorkOrder.NotFound",
            "WorkOrder does not exist.");
+
+        public static Error AtLeastOneRepairTaskIsRequired =>
+       Error.Validation(
+           code: "RepairTask.Required",
+          message: "At least one repair task must be specified.");
+
+        public static Error RepairTaskNotFound =>
+    Error.NotFound(
+            "RepairTask.NotFound",
+            "Repair task does not exist.");
     }
-}
+
+ 
+    }

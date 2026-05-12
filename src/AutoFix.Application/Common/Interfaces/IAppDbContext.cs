@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoFix.Domain.Customers;
 using AutoFix.Domain.Customers.Vehicles;
+using AutoFix.Domain.Employees;
 using AutoFix.Domain.RepairTasks;
 using AutoFix.Domain.RepairTasks.Parts;
 using AutoFix.Domain.WorkOrders;
@@ -24,6 +25,8 @@ namespace AutoFix.Application.Common.Interfaces
         public DbSet<RepairTask> RepairTasks { get; }
 
         public DbSet<Part> Parts { get; }
+
+        public DbSet<Employee> Employees { get; }
 
         Task<int> SaveChangesAsync(CancellationToken ct);
     }

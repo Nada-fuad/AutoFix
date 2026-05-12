@@ -8,7 +8,7 @@ using AutoFix.Application.Features.WorkOrders.Dtos;
 using AutoFix.Domain.Common.Results;
 using MediatR;
 
-namespace AutoFix.Application.Features.WorkOrders.Queries.GetWorkOrderByIdQuery
+namespace AutoFix.Application.Features.WorkOrders.Queries.GetWorkOrderById
 {
     public sealed record GetWorkOrderByIdQuery(Guid WorkOrderId) : ICachedQuery<Result<WorkOrderDto>>
     {

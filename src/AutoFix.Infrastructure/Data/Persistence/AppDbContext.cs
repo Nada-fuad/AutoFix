@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoFix.Application.Common.Interfaces;
 using AutoFix.Domain.Customers;
 using AutoFix.Domain.Customers.Vehicles;
+using AutoFix.Domain.Employees;
 using AutoFix.Domain.RepairTasks;
 using AutoFix.Domain.RepairTasks.Parts;
 using AutoFix.Domain.WorkOrders;
@@ -28,6 +29,8 @@ namespace AutoFix.Infrastructure.Data.Persistence
         public DbSet<RepairTask> RepairTasks => Set<RepairTask>();
 
         public DbSet<Part> Parts => Set<Part>();
+
+        public DbSet<Employee> Employees => Set<Employee>();
 
         public override Task<int> SaveChangesAsync(CancellationToken ct = default)
         {

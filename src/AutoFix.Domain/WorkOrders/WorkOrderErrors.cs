@@ -20,8 +20,11 @@ namespace AutoFix.Domain.WorkOrders
         public static Error RepairTasksRequired => Error.Validation(code: "WorkOrderErrors.RepairTasksRequired", message: "RepairTasks is required");
 
 
-       public static Error InvalidTiming => Error.Conflict(
-        code: "WorkOrderErrors.InvalidTiming",
-        message: "End time must be after start time.");
+       public static Error InvalidTiming => Error.Conflict(code: "WorkOrderErrors.InvalidTiming",message: "End time must be after start time.");
+
+        public static Error RepairTaskAlreadyAdded => Error.Conflict(code: "WorkOrderErrors.RepairTaskAlreadyAdded",message: "Repair task already exists.");
+
+        public static Error Readonly => Error.Conflict(code: "WorkOrderErrors.Readonly",message: "WorkOrder is read-only.");
+
     }
 }

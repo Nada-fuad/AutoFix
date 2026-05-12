@@ -11,7 +11,7 @@ using AutoFix.Domain.Common.Results;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace AutoFix.Application.Features.WorkOrders.Queries.GetWorkOrderByIdQuery
+namespace AutoFix.Application.Features.WorkOrders.Queries.GetWorkOrderById
 {
     public class GetWorkOrderByIdQueryHandler (IAppDbContext context): IRequestHandler<GetWorkOrderByIdQuery, Result<WorkOrderDto>>
     {

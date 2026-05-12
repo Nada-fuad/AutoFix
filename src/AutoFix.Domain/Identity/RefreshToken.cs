@@ -1,0 +1,50 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using AutoFix.Domain.Common;
+using AutoFix.Domain.Common.Results;
+
+namespace AutoFix.Domain.Identity
+{
+    public class RefreshToken:AuditableEntity
+    {
+        public string? Token { get; }
+        public string? UserId { get; }
+        public DateTimeOffset ExpiresOnUtc { get; }
+        public RefreshToken() { }
+
+        public RefreshToken(Guid id ,string? token,string? userId, DateTimeOffset expiresOnUtc):base(id)
+        {
+            Token = token;
+            UserId = userId;
+            ExpiresOnUtc = expiresOnUtc;
+        }
+
+
+        public static Result<RefreshToken> Create(Guid id,string? token, string? userId, DateTimeOffset expiresOnUtc)
+        {
+            if (id == Guid.Empty)
+            {
+                return RefreshTokenErrors.IdRequired;
+            }
+
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                return RefreshTokenErrors.TokenRequired;
+            }
+
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                return RefreshTokenErrors.UserIdRequired;
+            }
+
+            if (expiresOnUtc <= DateTimeOffset.UtcNow)
+            {
+                return RefreshTokenErrors.ExpiryInvalid;
+            }
+            return new RefreshToken(id, token, userId, expiresOnUtc);
+        }
+    }
+}
