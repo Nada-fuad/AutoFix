@@ -26,5 +26,11 @@ namespace AutoFix.Domain.WorkOrders
 
         public static Error Readonly => Error.Conflict(code: "WorkOrderErrors.Readonly",message: "WorkOrder is read-only.");
 
+        public static Error LaborIdEmpty(string id) => Error.Validation(code: "WorkOrderErrors.LaborIdEmpty",message: $"WorkOrder '{id}': Labor Id is empty");
+
+        public static Error LaborIdRequired => Error.Validation(
+        code: "WorkOrderErrors.LaborIdRequired",
+        message: "Labor Id is required");
+
     }
 }

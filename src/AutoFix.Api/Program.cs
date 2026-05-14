@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using AutoFix.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
+using AutoFix.Api;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddPresentation();
 
 builder.Services.AddApplication();
 
@@ -30,6 +32,17 @@ builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 
 var app = builder.Build();
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+    app.UseSwaggerUI(options => { options.SwaggerEndpoint("/openapi/v1.json", "AutoFix Api v1");
+
+        options.EnableDeepLinking();
+        options.DisplayRequestDuration();
+        options.EnableFilter();
+    
+    });
+}
 app.UseCors("AllowReact");
 
 

@@ -25,7 +25,11 @@ namespace AutoFix.Application.Features.WorkOrders.Commands.CreateWorkOrder
                 .NotEmpty()
                 .WithMessage("At least one repair task must be selected");
 
-            
+
+            RuleFor(request => request.LaborId)
+                .Must(laborId => laborId is null || laborId != Guid.Empty)
+                .WithMessage("If provided, LaborId must not be empty.");
+
 
 
         }

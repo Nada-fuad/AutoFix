@@ -11,7 +11,7 @@ using AutoFix.Domain.Customers.Vehicles;
 
 namespace AutoFix.Domain.Customers
 {
-    public sealed class Customer:AuditableEntity
+    public sealed class Customer : AuditableEntity
     {
 
         public string? Name { get; private set; }
@@ -22,20 +22,21 @@ namespace AutoFix.Domain.Customers
         private readonly List<Vehicle> _vehicles = [];
         public IReadOnlyCollection<Vehicle> Vehicles => _vehicles.AsReadOnly();
         private Customer() { }
-        private Customer(Guid id,string name,string email,string phoneNumber, List<Vehicle> vehicles) : base(id) {
-        
-            Name = name;    
+        private Customer(Guid id, string name, string email, string phoneNumber, List<Vehicle> vehicles) : base(id)
+        {
+
+            Name = name;
             Email = email;
             PhoneNumber = phoneNumber;
             _vehicles = vehicles;
-        
-        
+
+
         }
 
-        public static Result<Customer> Create(Guid id,string name, string email, string phoneNumber, List<Vehicle> vehicles)
+        public static Result<Customer> Create(Guid id, string name, string email, string phoneNumber, List<Vehicle> vehicles)
         {
-            if(string.IsNullOrWhiteSpace(name)) { return CustomerErrors.NameRequired; }
-            if (string.IsNullOrWhiteSpace(email)) {  return CustomerErrors.EmailRequired; }
+            if (string.IsNullOrWhiteSpace(name)) { return CustomerErrors.NameRequired; }
+            if (string.IsNullOrWhiteSpace(email)) { return CustomerErrors.EmailRequired; }
 
             try
             {
@@ -46,15 +47,15 @@ namespace AutoFix.Domain.Customers
 
                 return CustomerErrors.EmailInvalid;
             }
-            if (string.IsNullOrWhiteSpace(phoneNumber) || !Regex.IsMatch(phoneNumber, @"^\+?\d{7,15}$")) {  return CustomerErrors.PhoneNumberRequired; }  
-           
+            if (string.IsNullOrWhiteSpace(phoneNumber) || !Regex.IsMatch(phoneNumber, @"^\+?\d{7,15}$")) { return CustomerErrors.PhoneNumberRequired; }
+
 
 
             return new Customer(id, name, email, phoneNumber, vehicles);
         }
 
 
-        public  Result<Updated> Update(string name, string email, string phoneNumber)
+        public Result<Updated> Update(string name, string email, string phoneNumber)
         {
 
             if (string.IsNullOrWhiteSpace(name)) { return CustomerErrors.NameRequired; }
@@ -71,6 +72,29 @@ namespace AutoFix.Domain.Customers
         }
 
 
-       
+
+        public Result<Updated> UpserParts(List<Vehicle> incomingVehicle)
+        {
+            _vehicles.RemoveAll(existing => incomingVehicle.All(v => v.Id != existing.Id));
+
+            foreach (var incoming in incomingVehicle)
+            {
+                var existing = _vehicles.FirstOrDefault(v => v.Id == incoming.Id);
+                if (existing is null)
+                {
+                    _vehicles.Add(incoming);
+
+                }
+                else
+                {
+
+                    var updatedVehicleResult = existing.Update(incoming.Make, incoming.Model, incoming.Year, incoming.LicensePlate);
+                }
+
+
+            }
+            return Result.Updated;
+
+        }
     }
 }

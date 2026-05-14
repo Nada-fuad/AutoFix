@@ -61,6 +61,8 @@ namespace AutoFix.Application.Features.Customers.Commands.CreateCustomer
 
             await _context.SaveChangesAsync(ct);
 
+            await _cache.RemoveByTagAsync("customer",ct);
+
             var customer = createCustomerResult.Value;
             _logger.LogInformation("Customer created successfully. Id: {CustomerId}", createCustomerResult.Value.Id);
 

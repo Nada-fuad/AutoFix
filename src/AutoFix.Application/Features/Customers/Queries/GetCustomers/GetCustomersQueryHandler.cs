@@ -8,6 +8,7 @@ using AutoFix.Application.Features.Customers.Dtos;
 using AutoFix.Application.Features.Customers.Mappers;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace AutoFix.Application.Features.Customers.Queries.GetCustomers
 {
@@ -15,9 +16,9 @@ namespace AutoFix.Application.Features.Customers.Queries.GetCustomers
     {
         private readonly IAppDbContext _context = context;
 
-        public async Task<List<CustomerDto>> Handle(GetCustomersQuery query, CancellationToken cancellationToken)
+        public async Task<List<CustomerDto>> Handle(GetCustomersQuery query, CancellationToken ct)
         {
-            var customers = await _context.Customers.Include(c=>c.Vehicles).ToListAsync(cancellationToken);
+            var customers = await _context.Customers.Include(c=>c.Vehicles).AsNoTracking().ToListAsync(ct);
             return customers.Select(CustomerMapper.ToDto).ToList();
         }
     }

@@ -18,7 +18,8 @@ namespace AutoFix.Application.Features.WorkOrders.Mappers
 
         public static WorkOrderDto ToDto(this WorkOrder workOrder)
         {
-            return new WorkOrderDto {
+            return new WorkOrderDto
+            {
                 WorkOrderId = workOrder.Id,
                 Vehicle = workOrder.Vehicle is null ? null : workOrder.Vehicle.ToDto(),
                 CustomerName = workOrder.Vehicle.Customer.Name,
@@ -26,6 +27,8 @@ namespace AutoFix.Application.Features.WorkOrders.Mappers
                 EndAtUtc = workOrder.EndAtUtc,
                 RepairTasks = workOrder.RepairTasks.Select(repairTask => repairTask.ToDto()).ToList(),
                 State = workOrder.State,
+                LaborId = workOrder.LaborId
+
 
             };
 

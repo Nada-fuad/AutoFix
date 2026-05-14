@@ -21,7 +21,7 @@ namespace AutoFix.Infrastructure
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
 
-            services.AddScoped<IAppDbContext>(sp=>sp.GetRequiredService<AppDbContext>());
+            services.AddScoped<IAppDbContext,AppDbContext>();
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<ITokenProvider, TokenProvider>();
             services.AddAuthentication(options =>

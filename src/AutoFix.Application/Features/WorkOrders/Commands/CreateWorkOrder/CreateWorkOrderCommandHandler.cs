@@ -28,7 +28,12 @@ namespace AutoFix.Application.Features.WorkOrders.Commands.CreateWorkOrder
 
             var endAt = command.StartAt.AddMinutes(4);
 
-            var workOrderResult = WorkOrder.Create(Guid.NewGuid(), command.VehicleId, command.StartAt, endAt, repairTasks);
+            var workOrderResult = WorkOrder.Create(Guid.NewGuid(), command.VehicleId, command.StartAt, endAt, repairTasks,command.LaborId);
+
+            if (workOrderResult.IsError)
+            {
+                return workOrderResult.Errors;
+            }
 
             var workOrder = workOrderResult.Value;
             _context.WorkOrders.Add(workOrder);

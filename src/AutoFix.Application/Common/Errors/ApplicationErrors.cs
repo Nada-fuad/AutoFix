@@ -9,6 +9,9 @@ namespace AutoFix.Application.Common.Errors
 {
     public static class ApplicationErrors
     {
+        public static Error CustomerNotFound=> Error.NotFound(
+           "ApplicationErrors.Customer.NotFound",
+           "Customer does not exist.");
         public static Error WorkOrderNotFound=> Error.NotFound(
            "ApplicationErrors.WorkOrder.NotFound",
            "WorkOrder does not exist.");
@@ -22,6 +25,10 @@ namespace AutoFix.Application.Common.Errors
     Error.NotFound(
             "RepairTask.NotFound",
             "Repair task does not exist.");
+
+
+        public static Error LaborNotFound =>
+       Error.NotFound("Employee.LaborNotFound", "Labor does not exist.");
     }
 
  

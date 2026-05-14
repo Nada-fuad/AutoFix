@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoFix.Domain.Common;
 using AutoFix.Domain.Common.Results;
 using AutoFix.Domain.Customers.Vehicles;
+using AutoFix.Domain.Employees;
 using AutoFix.Domain.RepairTasks;
 using AutoFix.Domain.WorkOrders.Enums;
 
@@ -21,21 +22,26 @@ namespace AutoFix.Domain.WorkOrders
 
         public WorkOrderState State { get; private set; }
         public Vehicle? Vehicle { get; set; }
+        public Guid? LaborId { get; private set; }
+
+        public Employee? Labor { get; set; }
+
 
         private WorkOrder() { }
 
-        private WorkOrder(Guid id, Guid vehicleId, DateTimeOffset startAtUtc, DateTimeOffset endAtUtc,List<RepairTask> repairTasks) :base(id) {
+        private WorkOrder(Guid id, Guid vehicleId, DateTimeOffset startAtUtc, DateTimeOffset endAtUtc,List<RepairTask> repairTasks, Guid? laborId) :base(id) {
         
         VehicleId = vehicleId;
             StartAtUtc = startAtUtc;
             EndAtUtc = endAtUtc;
             _repairTasks = repairTasks;
+            LaborId = laborId;
 
 
         
         }
 
-        public static Result<WorkOrder> Create(Guid id, Guid vehicleId, DateTimeOffset startAtUtc, DateTimeOffset endAtUtc, List<RepairTask> repairTasks) {
+        public static Result<WorkOrder> Create(Guid id, Guid vehicleId, DateTimeOffset startAtUtc, DateTimeOffset endAtUtc, List<RepairTask> repairTasks, Guid? laborId) {
 
             if(id == Guid.Empty)
             {
@@ -55,8 +61,12 @@ namespace AutoFix.Domain.WorkOrders
             {
                 return WorkOrderErrors.InvalidTiming;
             }
-        
-        return new WorkOrder(id, vehicleId, startAtUtc, endAtUtc, repairTasks);
+            if (laborId == Guid.Empty)
+            {
+                return WorkOrderErrors.LaborIdRequired;
+            }
+
+            return new WorkOrder(id, vehicleId, startAtUtc, endAtUtc, repairTasks, laborId);
         }
 
 
@@ -87,6 +97,20 @@ namespace AutoFix.Domain.WorkOrders
         }
         public bool IsEditable => State is not (WorkOrderState.Completed or WorkOrderState.Cancelled or WorkOrderState.InProgress);
 
+        public Result<Updated> UpdateLabor(Guid laborId)
+        {
+            if (!IsEditable)
+            {
+                return WorkOrderErrors.Readonly;
+            }
+            if (laborId == Guid.Empty)
+            {
+                return WorkOrderErrors.LaborIdEmpty(Id.ToString());
+            }
 
+           LaborId = laborId;
+
+            return Result.Updated;
+        }
     }
 }
