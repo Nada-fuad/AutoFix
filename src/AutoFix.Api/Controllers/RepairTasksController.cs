@@ -1,85 +1,55 @@
 ﻿using AutoFix.Application.Features.RepairTasks.Commands.CreateRepairTask;
 using AutoFix.Application.Features.RepairTasks.Commands.RemoveRepairTask;
 using AutoFix.Application.Features.RepairTasks.Commands.UpdateRepairTask;
+using AutoFix.Application.Features.RepairTasks.Dtos;
 using AutoFix.Application.Features.RepairTasks.Queries.GetRepairTaskById;
 using AutoFix.Application.Features.RepairTasks.Queries.GetRepairTasks;
-using AutoFix.Contracts.Requests;
+using AutoFix.Contracts.Requests.RepairTasks;
 using AutoFix.Domain.RepairTasks.Enums;
+using AutoFix.Infrastructure.Migrations;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using System.Linq;
 namespace AutoFix.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RepairTasksController : ControllerBase
+    public class RepairTasksController(ISender sender) : ControllerBase
     {
 
-        private readonly IMediator _mediator;
 
-        public RepairTasksController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
 
-        [HttpPost]
-        public async Task<IActionResult> Create(CreateRepairTaskCommand command)
+        [HttpGet]
+        [ProducesResponseType(typeof(List<RepairTaskDto>), StatusCodes.Status200OK)]
+        [EndpointSummary("Retrieves all repair tasks.")]
+        [EndpointDescription("Returns a list of all repair tasks available in the system.")]
+        [EndpointName("GetRepairTasks")]
+
+        public async Task<IActionResult> Get(CancellationToken ct)
         {
-            var result = await _mediator.Send(command);
-            if (result.IsError)
+            var repairTasks = await sender.Send(new GetRepairTasksQuery(), ct);
+            if (repairTasks.IsError)
             {
-                return BadRequest(result.Errors);
-
+                return NotFound();
             }
-            return Ok(result.Value);
-
+            return Ok(repairTasks);
         }
 
-    
-        
-        [HttpDelete("{repairTaskId:Guid}")]
 
 
-     public async Task<IActionResult> Delete(Guid repairTaskId)
-    {
-            var repairTask = new RemoveRepairTaskCommand(repairTaskId);
-        var result = await _mediator.Send(repairTask);
-        if (result.IsError)
+
+
+        [HttpGet("{repairTaskId:guid}", Name = nameof(GetById))]
+        [ProducesResponseType(typeof(RepairTaskDto), StatusCodes.Status200OK)]
+        [EndpointSummary("Retrieves a repair task by ID.")]
+        [EndpointDescription("Returns detailed information for the specified repair task if it exists.")]
+        [EndpointName("GetRepairTaskById")]
+        public async Task<IActionResult> GetById(Guid repairTaskId,CancellationToken ct)
         {
-            return BadRequest(result.Errors);
-
-        }
-        return Ok(result.Value);
-
-    }
-
-
-        [HttpPut("{repairTaskId:Guid}")]
-
-
-        public async Task<IActionResult> Put(Guid repairTaskId, [FromBody] UpdateRepairTaskRequest request)
-        {
-            var parts = request.Parts.Select(p => new UpdateRepairTaskPartCommand(p.PartId, p.Name, p.Cost, p.Quantity)).ToList();
-
-
-
-            var repairTask= new UpdateRepairTaskCommand(repairTaskId,request.Name,request.LaborCost,(RepairDurationInMinutes)request.EstimatedDurationInMins,parts);
-
-            var result= await _mediator.Send(repairTask);
-            if (result.IsError)
-            {
-                return BadRequest(result.Errors);
-            }
-            return Ok(result.Value);
-
-        }
-
-        [HttpGet("{repairTaskId:Guid}")]
-
-        public async Task<IActionResult> GetById(Guid repairTaskId)
-        {
-            var repairTask= await _mediator.Send(new GetRepairTaskByIdQuery(repairTaskId));
+            var repairTask = await sender.Send(new GetRepairTaskByIdQuery(repairTaskId),ct);
             if (repairTask is null)
             {
                 return NotFound();
@@ -88,13 +58,85 @@ namespace AutoFix.Api.Controllers
             return Ok(repairTask);
         }
 
-        [HttpGet]
 
-        public async Task<IActionResult> Get()
+
+        [HttpPost]
+        [ProducesResponseType(typeof(RepairTaskDto), StatusCodes.Status201Created)]
+        [EndpointSummary("Creates a new repair task.")]
+        [EndpointDescription("Creates a repair task and optionally includes parts.")]
+        [EndpointName("CreateRepairTask")]
+        public async Task<IActionResult> Create([FromBody] CreateRepairTaskRequest request,CancellationToken ct)
         {
-            var repairTasks = await _mediator.Send(new GetRepairTasksQuery());
-            return Ok(repairTasks); 
+            var parts = request.Parts
+       .ConvertAll(p => new CreateRepairTaskPartCommand(p.Name, p.Cost, p.Quantity))
+;
+            var duration = request.EstimatedDurationInMins is not null ?(RepairDurationInMinutes)request.EstimatedDurationInMins.Value: RepairDurationInMinutes.Min30;
+            var command = new CreateRepairTaskCommand(
+                request.Name,
+                request.LaborCost,
+                duration,
+                parts);
+
+            var result = await sender.Send(command, ct);
+            if (result.IsError)
+            {
+                return BadRequest(result.Errors);
+
+            }
+            return Ok(result.Value);
+
         }
-        
-}
+
+
+
+       
+
+
+        [HttpPut("{repairTaskId:Guid}")]
+        [ProducesResponseType(typeof(RepairTaskDto), StatusCodes.Status204NoContent)]
+        [EndpointSummary("Updates an existing repair task.")]
+        [EndpointDescription("Updates a repair task and its associated parts.")]
+        [EndpointName("UpdateRepairTask")]
+
+        public async Task<IActionResult> Update(Guid repairTaskId, [FromBody] UpdateRepairTaskRequest request, CancellationToken ct)
+        {
+            var parts = request.Parts
+                      .ConvertAll(p => new UpdateRepairTaskPartCommand(p.PartId, p.Name, p.Cost, p.Quantity));
+
+
+            var command= new UpdateRepairTaskCommand(repairTaskId,request.Name,request.LaborCost,(RepairDurationInMinutes)request.EstimatedDurationInMins,parts);
+
+            var result= await sender.Send(command,ct);
+            if (result.IsError)
+            {
+                return BadRequest(result.Errors);
+            }
+            return Ok(result.Value);
+
+        }
+
+
+
+
+        [HttpDelete("{repairTaskId:guid}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [EndpointSummary("Removes a repair task.")]
+        [EndpointDescription("Deletes the specified repair task from the system.")]
+        [EndpointName("RemoveRepairTask")]
+
+        public async Task<IActionResult> Delete(Guid repairTaskId)
+        {
+            var repairTask = new RemoveRepairTaskCommand(repairTaskId);
+            var result = await sender.Send(repairTask);
+            if (result.IsError)
+            {
+                return BadRequest(result.Errors);
+
+            }
+            return Ok(result.Value);
+
+        }
+
+
+    }
 }

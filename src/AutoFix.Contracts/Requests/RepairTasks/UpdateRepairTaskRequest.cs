@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AutoFix.Contracts.Requests
+namespace AutoFix.Contracts.Requests.RepairTasks
 {
     public class UpdateRepairTaskRequest
     {
@@ -20,7 +20,7 @@ namespace AutoFix.Contracts.Requests
         public int EstimatedDurationInMins { get; set; }
 
         [MinLength(1, ErrorMessage = "At least one part is required.")]
-public List<UpdateRepairTaskPartRequest> Parts { get; set; } = [];
+        public List<UpdateRepairTaskPartRequest> Parts { get; set; } = [];
 
 
 

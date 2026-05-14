@@ -17,7 +17,7 @@ namespace AutoFix.Application.Features.RepairTasks.Queries.GetRepairTasks
 
         public async Task<Result<List<RepairTaskDto>>> Handle(GetRepairTasksQuery request, CancellationToken ct)
         {
-            var repairTasks = await _context.RepairTasks.Include(x => x.Parts).ToListAsync(ct);
+            var repairTasks = await _context.RepairTasks.Include(x => x.Parts).AsNoTracking().ToListAsync(ct);
 
             return repairTasks.Select(x => new RepairTaskDto
             {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AutoFix.Contracts.Requests
+namespace AutoFix.Contracts.Requests.RepairTasks
 {
     public class UpdateRepairTaskPartRequest
     {

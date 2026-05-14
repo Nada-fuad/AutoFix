@@ -12,7 +12,7 @@ namespace AutoFix.Application.Features.RepairTasks.Queries.GetRepairTaskById
         public GetRepairTaskByIdQueryValidator() { 
         
         
-        RuleFor(x=>x.repairTaskId).NotEmpty();
+        RuleFor(x=>x.RepairTaskId).NotEmpty();
         }
     }
 }

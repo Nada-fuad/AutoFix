@@ -21,8 +21,8 @@ namespace AutoFix.Domain.RepairTasks
 
         private readonly List<Part> _parts = [];
         public IEnumerable<Part> Parts=> _parts.AsReadOnly();
-
-
+        
+        public decimal TotalCost=>LaborCost+Parts.Sum(p => p.Cost*p.Quantity);
 
         public RepairTask() { }
         public RepairTask(Guid id,string name , decimal laborCost, RepairDurationInMinutes estimatedDurationInMins, List<Part> parts) :base(id) {
@@ -62,7 +62,7 @@ namespace AutoFix.Domain.RepairTasks
             {
                 return RepairTaskErrors.NameRequired;
             }
-            if (laborCost < 0)
+            if (laborCost <= 0 || laborCost > 10000)
             {
                 return RepairTaskErrors.LaborCostInvalid;
             }
@@ -73,7 +73,30 @@ namespace AutoFix.Domain.RepairTasks
 
             Name = name.Trim();
             LaborCost = laborCost;
-                    EstimatedDurationInMins = estimatedDurationInMins;
+            EstimatedDurationInMins = estimatedDurationInMins;
+
+            return Result.Updated;
+        }
+
+
+        public Result<Updated> UpserParts(List<Part> incomigParts)
+        {
+            _parts.RemoveAll(existing => incomigParts.All(p=>p.Id== existing.Id));
+
+            foreach(var incoming in incomigParts)
+            {
+                var existing=_parts.FirstOrDefault(p=>p.Id == incoming.Id);
+                if(existing == null)
+                {
+                    _parts.Add(incoming);
+                }
+                var updatePartResult = incoming.Update(incoming.Name, incoming.Cost, incoming.Quantity);
+                if (updatePartResult.IsError)
+                {
+                    return updatePartResult.Errors;
+                }
+            }
+
 
             return Result.Updated;
         }
