@@ -67,8 +67,9 @@ namespace AutoFix.Api.Controllers
             var result = await _mediator.Send(
                       new CreateCustomerCommand(
                       request.Name,
+                       request.Email,
                       request.PhoneNumber,
-                      request.Email,
+                     
                       vehicles),
                       ct);
 

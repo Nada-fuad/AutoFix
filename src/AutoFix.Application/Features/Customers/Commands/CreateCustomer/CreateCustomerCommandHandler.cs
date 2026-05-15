@@ -25,7 +25,7 @@ namespace AutoFix.Application.Features.Customers.Commands.CreateCustomer
         public async Task<Result<CustomerDto>> Handle(CreateCustomerCommand command, CancellationToken ct)
         {
 
-            var email = command.email.Trim().ToLower();
+            var email = command.Email.Trim().ToLower();
 
             var exists= await _context.Customers.AnyAsync(x => x.Email!.ToLower() == email,ct);
 
@@ -50,7 +50,7 @@ namespace AutoFix.Application.Features.Customers.Commands.CreateCustomer
                 vehicles.Add(vehicleResult.Value);
             }
 
-            var createCustomerResult = Customer.Create(Guid.NewGuid(),   command.name.Trim(), command.email.Trim(), command.phoneNumber.Trim(), vehicles);
+            var createCustomerResult = Customer.Create(Guid.NewGuid(),   command.Name.Trim(), command.Email.Trim(), command.PhoneNumber.Trim(), vehicles);
 
             if (createCustomerResult.IsError)
             {
