@@ -52,14 +52,14 @@ using (var scope = app.Services.CreateScope())
 {
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
 
-    var user = await userManager.FindByEmailAsync("test@test.com");
+    var user = await userManager.FindByEmailAsync("test1@test.com");
 
     if (user is null)
     {
         var newUser = new AppUser
         {
-            UserName = "test@test.com",
-            Email = "test@test.com",
+            UserName = "test1@test.com",
+            Email = "test1@test.com",
             EmailConfirmed = true
         };
 

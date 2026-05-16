@@ -1,10 +1,12 @@
 ﻿using AutoFix.Application.Features.WorkOrders.Commands.AssignLabor;
 using AutoFix.Application.Features.WorkOrders.Commands.CreateWorkOrder;
+using AutoFix.Application.Features.WorkOrders.Commands.RecolateWorkOrder;
 using AutoFix.Application.Features.WorkOrders.Commands.UpdateWorkOrder;
 using AutoFix.Application.Features.WorkOrders.Commands.UpdateWorkOrderRepairTasks;
 using AutoFix.Application.Features.WorkOrders.Queries.GetWorkOrderById;
 using AutoFix.Contracts.Requests.WorkOrders;
 using AutoFix.Domain.WorkOrders;
+using AutoFix.Domain.WorkOrders.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -98,5 +100,23 @@ namespace AutoFix.Api.Controllers
             return Ok(result.Value);
         }
 
+        [HttpPut("{workOrderId:guid}/relocation")]
+
+
+        public async Task<IActionResult> RecolateWorkOrder(Guid workOrderId,RelocateWorkOrderRequest request ,   CancellationToken ct)
+        {
+
+            var command = new RelocateWorkOrderCommand(workOrderId,request.NewStartAtUtc,(Spot)(int)request.NewSpot);
+
+
+
+            var result= await _mediator.Send(command,ct);  
+
+            if (result.IsError) {
+
+                return BadRequest(result.Errors);
+            }
+            return Ok(result.Value);
+        }
     }
     }

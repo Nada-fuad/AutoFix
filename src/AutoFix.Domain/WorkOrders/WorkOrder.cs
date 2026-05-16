@@ -26,7 +26,7 @@ namespace AutoFix.Domain.WorkOrders
 
         public Employee? Labor { get; set; }
 
-
+        public Spot spot { get; set; }
         private WorkOrder() { }
 
         private WorkOrder(Guid id, Guid vehicleId, DateTimeOffset startAtUtc, DateTimeOffset endAtUtc,List<RepairTask> repairTasks, Guid? laborId) :base(id) {
@@ -109,6 +109,44 @@ namespace AutoFix.Domain.WorkOrders
             }
 
            LaborId = laborId;
+
+            return Result.Updated;
+        }
+
+
+
+        public Result<Updated> UpdateSpot(Spot newSpot)
+        {
+            if (IsEditable)
+            {
+                return WorkOrderErrors.Readonly;
+            }
+
+            if (!Enum.IsDefined(newSpot))
+            {
+                return WorkOrderErrors.SpotInvalid;
+            }
+
+            spot = newSpot;
+
+            return Result.Updated;
+        }
+
+
+        public Result<Updated> UpdateTiming(DateTimeOffset startAt, DateTimeOffset endAt)
+        {
+            if (!IsEditable)
+            {
+                return WorkOrderErrors.TimingReadonly(Id.ToString(), State);
+            }
+
+            if (endAt <= startAt)
+            {
+                return WorkOrderErrors.InvalidTiming;
+            }
+
+            StartAtUtc = startAt;
+            EndAtUtc = endAt;
 
             return Result.Updated;
         }

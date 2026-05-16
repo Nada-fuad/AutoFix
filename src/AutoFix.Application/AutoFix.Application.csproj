@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Identity\Queries\GetUserInfo\" />
     <Folder Include="Features\Identity\Queries\ResfreshTokens\" />
   </ItemGroup>
 

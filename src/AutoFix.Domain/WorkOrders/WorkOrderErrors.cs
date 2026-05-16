@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoFix.Domain.Common.Results;
+using AutoFix.Domain.WorkOrders.Enums;
 
 namespace AutoFix.Domain.WorkOrders
 {
@@ -31,6 +32,15 @@ namespace AutoFix.Domain.WorkOrders
         public static Error LaborIdRequired => Error.Validation(
         code: "WorkOrderErrors.LaborIdRequired",
         message: "Labor Id is required");
+
+        public static Error SpotInvalid => Error.Validation(
+       code: "WorkOrderErrors.SpotInvalid",
+       message: "The provided spot is invalid");
+
+
+        public static Error TimingReadonly(string id, WorkOrderState state) => Error.Conflict(
+       code: "WorkOrderErrors.TimingReadonly", message: $"WorkOrder '{id}': Can't Modify timing when WorkOrder status is '{state}'.");
+
 
     }
 }

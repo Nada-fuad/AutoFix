@@ -61,34 +61,21 @@ Content-Type: application/json
 DELETE {{baseUrl}}/api/customers/79f186c9-0035-4e83-8998-2e9ab46760de
 
 
-####
-POST {{baseUrl}}/api/Auth/login
-Content-Type: application/json
 
-{
-  "email": "test@test.com",
-  "password": "123456"
-}
-
-###
-POST {{baseUrl}}/api/Auth/login
-Content-Type: application/json
-
-{
-  "email": "test@test.com",
-  "password": "123456"
-}
 ######
 
 POST {{baseUrl}}/api/Auth/login
 Content-Type: application/json
 
 {
-  "email": "test@test.com",
+  "email": "test1@test.com",
   "password": "Test123"
 }
 
 
+####
+GET {{baseUrl}}/api/Auth/current-user/claims
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTgxYzRlNy1hYWMzLTRhYWMtYTQ5ZC02ZTRiMGJjMTM2NzkiLCJlbWFpbCI6InRlc3QxQHRlc3QuY29tIiwibmJmIjoxNzc4OTQyOTE2LCJleHAiOjE3Nzg5NDY1MTYsImlhdCI6MTc3ODk0MjkxNiwiaXNzIjoibG9jYWxob3N0IiwiYXVkIjoibG9jYWxob3N0In0.joSltd9mqCLwJacWiXRPgXV7AGHoR6KkHJgfMuYKg_o
 
 
 
