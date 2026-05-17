@@ -64,7 +64,7 @@ DELETE {{baseUrl}}/api/customers/79f186c9-0035-4e83-8998-2e9ab46760de
 
 ######
 
-POST {{baseUrl}}/api/Auth/login
+POST {{baseUrl}}/api/identity/login
 Content-Type: application/json
 
 {
@@ -74,8 +74,8 @@ Content-Type: application/json
 
 
 ####
-GET {{baseUrl}}/api/Auth/current-user/claims
-Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTgxYzRlNy1hYWMzLTRhYWMtYTQ5ZC02ZTRiMGJjMTM2NzkiLCJlbWFpbCI6InRlc3QxQHRlc3QuY29tIiwibmJmIjoxNzc4OTQyOTE2LCJleHAiOjE3Nzg5NDY1MTYsImlhdCI6MTc3ODk0MjkxNiwiaXNzIjoibG9jYWxob3N0IiwiYXVkIjoibG9jYWxob3N0In0.joSltd9mqCLwJacWiXRPgXV7AGHoR6KkHJgfMuYKg_o
+GET {{baseUrl}}/api/identity/current-user/claims
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTgxYzRlNy1hYWMzLTRhYWMtYTQ5ZC02ZTRiMGJjMTM2NzkiLCJlbWFpbCI6InRlc3QxQHRlc3QuY29tIiwibmJmIjoxNzc4OTQ0Mjg1LCJleHAiOjE3Nzg5NDc4ODUsImlhdCI6MTc3ODk0NDI4NSwiaXNzIjoibG9jYWxob3N0IiwiYXVkIjoibG9jYWxob3N0In0.9wjoRAAF0G3pAvmiqhSGWT2Od42348MRVKuGTOGbQ48
 
 
 

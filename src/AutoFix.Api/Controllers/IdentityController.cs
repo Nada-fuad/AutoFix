@@ -12,11 +12,9 @@ namespace AutoFix.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class IdentityController(ISender sender, IIdentityService identityService, ITokenProvider tokenProvider) : ControllerBase
+    public class IdentityController(ISender sender) : ControllerBase
     {
-        private readonly IIdentityService _identityService= identityService;
-        private readonly ITokenProvider _tokenProvider=tokenProvider;
-        
+      
           
         
         [HttpPost("login")]

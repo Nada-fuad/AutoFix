@@ -34,6 +34,7 @@ namespace AutoFix.Application.Features.Identity.Queries.GenerateTokens
                 return generateTokenResult.Errors;
             }
 
+           
             return generateTokenResult.Value;
         }
     }

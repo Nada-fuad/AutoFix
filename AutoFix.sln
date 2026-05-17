@@ -17,8 +17,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoFix.Infrastructure", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoFix.Contracts", "src\AutoFix.Contracts\AutoFix.Contracts.csproj", "{300F2BE6-6C64-4210-A6A2-CADE88A43E39}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Projektmappenelemente", "Projektmappenelemente", "{593484E1-4376-4454-8A11-8DF9C195D24D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoFix.Tests.Common", "AutoFix.Tests\AutoFix.Tests.Common.csproj", "{C393C40A-95B5-4022-BB7C-D22DDCC996E2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoFix.Domain.UnitTests", "AutoFix.Domain.UnitTests\AutoFix.Domain.UnitTests.csproj", "{57A9F27E-8748-45DE-9998-808599D5B0D1}"
@@ -28,6 +26,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoFix.Application.SubcutaneousTests", "AutoFix.Application.SubcutaneousTests\AutoFix.Application.SubcutaneousTests.csproj", "{AADF98AE-91F3-4382-ACB4-F21FB194F166}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoFix.Api.IntegrationTests", "AutoFix.Api.IntegrationTests\AutoFix.Api.IntegrationTests.csproj", "{C20D7D9F-337A-40C4-AB51-002238C114FA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Projektmappenelemente", "Projektmappenelemente", "{D77DCCA4-F2F2-4C93-A171-CB170280B5CC}"
+	ProjectSection(SolutionItems) = preProject
+		docker-copmpose.yml = docker-copmpose.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
