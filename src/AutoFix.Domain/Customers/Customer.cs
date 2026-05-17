@@ -89,6 +89,11 @@ namespace AutoFix.Domain.Customers
                 {
 
                     var updatedVehicleResult = existing.Update(incoming.Make, incoming.Model, incoming.Year, incoming.LicensePlate);
+
+                    if (updatedVehicleResult.IsError)
+                    {
+                        return updatedVehicleResult.Errors;
+                    }
                 }
 
 

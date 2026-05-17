@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoFix.Application.Common.Interfaces;
+using AutoFix.Domain.Common;
 using AutoFix.Domain.Customers;
 using AutoFix.Domain.Customers.Vehicles;
 using AutoFix.Domain.Employees;
@@ -41,7 +42,7 @@ namespace AutoFix.Infrastructure.Data.Persistence
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
-
+            modelBuilder.Ignore<DomainEvent>();
         }
     }
 }

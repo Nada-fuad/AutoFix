@@ -11,6 +11,7 @@ namespace AutoFix.Domain.Common
         public Guid Id { get; private set; }
 
         private readonly List<DomainEvent> _domainEvents = [];
+        public IReadOnlyCollection<DomainEvent> DomainEvents => _domainEvents.AsReadOnly();
         protected Entity() { }
        protected Entity(Guid id) {
             Id=(id==Guid.Empty)?Guid.NewGuid():id;

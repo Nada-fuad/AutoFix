@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AutoFix.Application.Common.Behaviours;
 using FluentValidation;
 using MediatR;
+using MediatR.Pipeline;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AutoFix.Application
@@ -21,6 +22,8 @@ namespace AutoFix.Application
             services.AddValidatorsFromAssembly((typeof(DependencyInjection).Assembly));
             services.AddTransient(typeof(IPipelineBehavior<,>),typeof(ValidationBehavior<,>));
            services.AddTransient(typeof(IPipelineBehavior<,>),typeof(CachingBehavior<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
+            services.AddTransient(typeof(IRequestPreProcessor<>), typeof(LoggingBehaviour<>));
             return services;
         }
     }

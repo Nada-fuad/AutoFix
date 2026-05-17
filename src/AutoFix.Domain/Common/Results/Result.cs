@@ -75,6 +75,7 @@ namespace AutoFix.Domain.Common.Results
         }
 
 
+
         public TNextValue Match<TNextValue>(Func<TValue, TNextValue> onValue, Func<List<Error>, TNextValue> onError) =>
             IsSuccess ? onValue(Value!) : onError(Errors);
 
@@ -83,6 +84,9 @@ namespace AutoFix.Domain.Common.Results
         public static implicit operator Result<TValue>(Error error) => new(error);
 
         public static implicit operator Result<TValue>(List<Error> errors) => new(errors);
+
+
+
 
     }
 
