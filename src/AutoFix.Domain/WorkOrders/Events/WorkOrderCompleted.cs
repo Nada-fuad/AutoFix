@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoFix.Domain.Common;
 
 namespace AutoFix.Domain.WorkOrders.Events
 {
-    internal class WorkOrderCompleted
+   public sealed class WorkOrderCompleted:DomainEvent
     {
+        public Guid WorkOrderId { get; set; }
+
     }
 }

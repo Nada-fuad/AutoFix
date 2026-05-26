@@ -41,6 +41,10 @@ namespace AutoFix.Domain.WorkOrders
         public static Error TimingReadonly(string id, WorkOrderState state) => Error.Conflict(
        code: "WorkOrderErrors.TimingReadonly", message: $"WorkOrder '{id}': Can't Modify timing when WorkOrder status is '{state}'.");
 
+        public static Error InvalidStateTransition(WorkOrderState current, WorkOrderState next) => Error.Conflict(
+       code: "WorkOrderErrors.InvalidStateTransition",
+       message: $"WorkOrder Invalid State transition from '{current}' to '{next}'.");
+
 
     }
 }

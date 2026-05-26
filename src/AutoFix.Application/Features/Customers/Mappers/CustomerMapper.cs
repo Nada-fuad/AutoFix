@@ -5,37 +5,50 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoFix.Application.Features.Customers.Dtos;
 using AutoFix.Domain.Customers;
+using AutoFix.Domain.Customers.Vehicles;
 
 namespace AutoFix.Application.Features.Customers.Mappers
 {
     public static class CustomerMapper
     {
 
-        public static CustomerDto ToDto(Customer customer)
+        public static CustomerDto ToDto(this Customer entity)
         {
 
-            return new CustomerDto
-            {
+            
 
-                Id = customer.Id,
-                Name = customer.Name,
-                Email = customer.Email,
-                PhoneNumber = customer.PhoneNumber,
+         ArgumentNullException.ThrowIfNull(entity);
 
-                Vehicles=customer.Vehicles.Select(v=>new VehicleDto(
-
-                      v.Id,
-                   v.Make,
-                    v.Model,
-                  v.Year,
-                     v.LicensePlate
-                    )
-
-                
-                   
-                ).ToList()
-            };
+        return new CustomerDto
+        {
+            CustomerId = entity.Id,
+            Name = entity.Name!,
+            Email = entity.Email!,
+            PhoneNumber = entity.PhoneNumber!,
+            Vehicles = entity.Vehicles?.Select(v => v.ToDto()).ToList() ?? []
+        };
+        
 
         }
+
+
+        public static List<CustomerDto> ToDtos(this IEnumerable<Customer> entities)
+        {
+            return [.. entities.Select(e => e.ToDto())];
+        }
+
+        public static VehicleDto ToDto(this Vehicle entity)
+        {
+            ArgumentNullException.ThrowIfNull(entity);
+
+            return new VehicleDto(entity.Id, entity.Make!, entity.Model!, entity.Year, entity.LicensePlate!);
+        }
+
+        public static List<VehicleDto> ToDtos(this IEnumerable<Vehicle> entities)
+        {
+            return [.. entities.Select(e => e.ToDto())];
+        }
+
+
     }
 }

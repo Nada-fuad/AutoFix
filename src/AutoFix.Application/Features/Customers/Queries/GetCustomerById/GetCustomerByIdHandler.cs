@@ -30,7 +30,7 @@ namespace AutoFix.Application.Features.Customers.Queries.GetCustomerById
                 code: "Customer_NotFound",
                 message: $"Customer with id '{query.CustomerId}' was not found");
             }
-            return CustomerMapper.ToDto(customer);
+            return customer.ToDto();
         }
     }
 }

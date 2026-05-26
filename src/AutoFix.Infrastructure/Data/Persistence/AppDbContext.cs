@@ -8,9 +8,11 @@ using AutoFix.Domain.Common;
 using AutoFix.Domain.Customers;
 using AutoFix.Domain.Customers.Vehicles;
 using AutoFix.Domain.Employees;
+using AutoFix.Domain.Identity;
 using AutoFix.Domain.RepairTasks;
 using AutoFix.Domain.RepairTasks.Parts;
 using AutoFix.Domain.WorkOrders;
+using AutoFix.Domain.WorkOrders.Billing;
 using AutoFix.Infrastructure.Data.Configurations;
 using AutoFix.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -32,7 +34,9 @@ namespace AutoFix.Infrastructure.Data.Persistence
         public DbSet<Part> Parts => Set<Part>();
 
         public DbSet<Employee> Employees => Set<Employee>();
-
+       
+        public DbSet<Invoice> Invoices => Set<Invoice>();
+        public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
         public override Task<int> SaveChangesAsync(CancellationToken ct = default)
         {
             return base.SaveChangesAsync(ct);

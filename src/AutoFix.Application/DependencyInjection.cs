@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,13 +18,22 @@ namespace AutoFix.Application
 
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
+            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
-            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
-            services.AddValidatorsFromAssembly((typeof(DependencyInjection).Assembly));
-            services.AddTransient(typeof(IPipelineBehavior<,>),typeof(ValidationBehavior<,>));
-           services.AddTransient(typeof(IPipelineBehavior<,>),typeof(CachingBehavior<,>));
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
-            services.AddTransient(typeof(IRequestPreProcessor<>), typeof(LoggingBehaviour<>));
+            services.AddMediatR(cfg =>
+            {
+                cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+
+
+
+                cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+                cfg.AddOpenBehavior(typeof(UnhandledExceptionBehaviour<,>));
+                cfg.AddOpenBehavior(typeof(CachingBehavior<,>));
+               // cfg.AddOpenBehavior(typeof(LoggingBehaviour<>));
+                cfg.AddOpenBehavior(typeof(PerformanceBehaviour<,>));
+
+            });
+
             return services;
         }
     }

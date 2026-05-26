@@ -8,7 +8,7 @@ namespace AutoFix.Domain.WorkOrders.Enums
 {
     public enum WorkOrderState
     {
-        scheduled,
+        Scheduled,
         InProgress,
         Completed,
         Cancelled

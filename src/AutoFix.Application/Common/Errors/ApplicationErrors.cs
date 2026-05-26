@@ -29,7 +29,20 @@ namespace AutoFix.Application.Common.Errors
 
         public static Error LaborNotFound =>
        Error.NotFound("Employee.LaborNotFound", "Labor does not exist.");
+
+        public static Error WorkOrderMustBeCompletedForInvoicing =>
+   Error.Conflict(
+           "WorkOrder.InvoiceIssuance.InvalidState",
+           "WorkOrder must be in 'Completed' state to issue an invoice.");
+
+
+
+        public static Error InvoiceNotFound => Error.NotFound(
+      "ApplicationErrors.Invoice.NotFound",
+      "Invoice does not exist.");
     }
+
+
 
  
     }

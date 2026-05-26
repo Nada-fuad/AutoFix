@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace AutoFix.Domain.WorkOrders.Billing
 {
-    internal class InvoiceStatus
+    public enum InvoiceStatus
     {
+        Unpaid = 0,
+        Paid = 1,
+        Refunded = 2
     }
 }

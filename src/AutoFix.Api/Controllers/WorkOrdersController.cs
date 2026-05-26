@@ -20,18 +20,18 @@ namespace AutoFix.Api.Controllers
         private readonly IMediator _mediator = mediator;
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateWorkOrderRequest request,CancellationToken ct)
-        {
-            var command = new CreateWorkOrderCommand(request.VehicleId,request.StartAtUtc,request.RepairTaskIds,request.LaborId);
-            var result=await _mediator.Send(command);
+        //public async Task<IActionResult> Create(CreateWorkOrderRequest request,CancellationToken ct)
+        //{
+        //    var command = new CreateWorkOrderCommand(request.VehicleId,request.StartAtUtc,request.LaborId,request.Spot, request.RepairTaskIds);
+        //    var result=await _mediator.Send(command);
 
-            if (result.IsError)
-            {
-                return BadRequest(result.Errors);
-            }
-            return Ok(result.Value);
+        //    if (result.IsError)
+        //    {
+        //        return BadRequest(result.Errors);
+        //    }
+        //    return Ok(result.Value);
 
-        }
+        //}
 
         [HttpDelete("{workOrderId:guid}")]
 

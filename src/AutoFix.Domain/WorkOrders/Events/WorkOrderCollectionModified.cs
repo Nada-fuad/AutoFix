@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoFix.Domain.Common;
 
 namespace AutoFix.Domain.WorkOrders.Events
 {
-    internal class WorkOrderCollectionModified
-    {
-    }
+   public sealed class WorkOrderCollectionModified:DomainEvent;
+   
 }

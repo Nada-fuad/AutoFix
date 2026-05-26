@@ -3,6 +3,7 @@ using System.Text;
 using AutoFix.Application.Common.Interfaces;
 using AutoFix.Infrastructure.Data.Persistence;
 using AutoFix.Infrastructure.Identity;
+using AutoFix.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -71,7 +72,8 @@ namespace AutoFix.Infrastructure
                 LocalCacheExpiration = TimeSpan.FromSeconds(30), // L1
             });
 
-              
+            services.AddScoped<IInvoicePdfGenerator, InvoicePdfGenerator>();
+
             return services;
         }
 

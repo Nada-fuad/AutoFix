@@ -19,7 +19,7 @@ namespace AutoFix.Application.Features.Customers.Queries.GetCustomers
         public async Task<List<CustomerDto>> Handle(GetCustomersQuery query, CancellationToken ct)
         {
             var customers = await _context.Customers.Include(c=>c.Vehicles).AsNoTracking().ToListAsync(ct);
-            return customers.Select(CustomerMapper.ToDto).ToList();
+            return customers.ToDtos();
         }
     }
 }

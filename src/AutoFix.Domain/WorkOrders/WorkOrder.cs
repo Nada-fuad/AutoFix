@@ -8,6 +8,7 @@ using AutoFix.Domain.Common.Results;
 using AutoFix.Domain.Customers.Vehicles;
 using AutoFix.Domain.Employees;
 using AutoFix.Domain.RepairTasks;
+using AutoFix.Domain.WorkOrders.Billing;
 using AutoFix.Domain.WorkOrders.Enums;
 
 namespace AutoFix.Domain.WorkOrders
@@ -17,33 +18,44 @@ namespace AutoFix.Domain.WorkOrders
         public Guid VehicleId { get; private set; }
         public DateTimeOffset StartAtUtc { get; private set; }
         public DateTimeOffset EndAtUtc { get; private set; }
-        private List<RepairTask> _repairTasks = [];
-        public IReadOnlyCollection<RepairTask> RepairTasks => _repairTasks.AsReadOnly();
+        public Guid? LaborId { get; private set; }
 
+      
         public WorkOrderState State { get; private set; }
         public Vehicle? Vehicle { get; set; }
-        public Guid? LaborId { get; private set; }
 
         public Employee? Labor { get; set; }
 
-        public Spot spot { get; set; }
+        public Spot Spot { get; set; }
+        public Invoice? Invoice { get; set; }
+        public decimal? Discount { get; private set; }
+        public decimal? Tax { get; private set; }
+        public decimal? TotalPartsCost => _repairTasks.SelectMany(rt => rt.Parts).Sum(p => p.Cost);
+        public decimal? TotalLaborCost => _repairTasks.Sum(rt => rt.LaborCost);
+        public decimal? Total => (TotalPartsCost ?? 0) + (TotalLaborCost ?? 0);
+
+
+        private List<RepairTask> _repairTasks = [];
+        public IReadOnlyCollection<RepairTask> RepairTasks => _repairTasks.AsReadOnly();
+
         private WorkOrder() { }
 
-        private WorkOrder(Guid id, Guid vehicleId, DateTimeOffset startAtUtc, DateTimeOffset endAtUtc,List<RepairTask> repairTasks, Guid? laborId) :base(id) {
-        
-        VehicleId = vehicleId;
+        private WorkOrder(Guid id, Guid vehicleId, DateTimeOffset startAtUtc, DateTimeOffset endAtUtc, Guid laborId, Spot spot, WorkOrderState state,List<RepairTask> repairTasks) :base(id) {
+
+            VehicleId = vehicleId;
             StartAtUtc = startAtUtc;
             EndAtUtc = endAtUtc;
-            _repairTasks = repairTasks;
             LaborId = laborId;
+            Spot = spot;
+            State = state;
+            _repairTasks = repairTasks;
 
 
-        
         }
 
-        public static Result<WorkOrder> Create(Guid id, Guid vehicleId, DateTimeOffset startAtUtc, DateTimeOffset endAtUtc, List<RepairTask> repairTasks, Guid? laborId) {
+        public static Result<WorkOrder> Create(Guid id, Guid vehicleId, DateTimeOffset startAtUtc, DateTimeOffset endAtUtc, Guid laborId, Spot spot, List<RepairTask> repairTasks) {
 
-            if(id == Guid.Empty)
+            if (id == Guid.Empty)
             {
                 return WorkOrderErrors.WorkOrderIdRequired;
             }
@@ -57,16 +69,23 @@ namespace AutoFix.Domain.WorkOrders
             {
                 return WorkOrderErrors.RepairTasksRequired;
             }
-            if (endAtUtc <= startAtUtc)
-            {
-                return WorkOrderErrors.InvalidTiming;
-            }
+
             if (laborId == Guid.Empty)
             {
                 return WorkOrderErrors.LaborIdRequired;
             }
 
-            return new WorkOrder(id, vehicleId, startAtUtc, endAtUtc, repairTasks, laborId);
+            if (endAtUtc <= startAtUtc)
+            {
+                return WorkOrderErrors.InvalidTiming;
+            }
+
+            if (!Enum.IsDefined(spot))
+            {
+                return WorkOrderErrors.SpotInvalid;
+            }
+
+            return new WorkOrder(id, vehicleId, startAtUtc, endAtUtc, laborId, spot, WorkOrderState.Scheduled, repairTasks);
         }
 
 
@@ -82,6 +101,7 @@ namespace AutoFix.Domain.WorkOrders
 
             _repairTasks.Add(repairTask);
             return Result.Updated;
+            
         }
 
         public Result<Updated> ClearRepairTasks()
@@ -127,7 +147,7 @@ namespace AutoFix.Domain.WorkOrders
                 return WorkOrderErrors.SpotInvalid;
             }
 
-            spot = newSpot;
+            Spot = newSpot;
 
             return Result.Updated;
         }
@@ -150,5 +170,45 @@ namespace AutoFix.Domain.WorkOrders
 
             return Result.Updated;
         }
+
+
+        public Result<Updated> UpdateState(WorkOrderState newState)
+        {
+            if (!CanTransitionTo(newState))
+            {
+                return WorkOrderErrors.InvalidStateTransition(State, newState);
+            }
+
+            State = newState;
+
+            return Result.Updated;
+        }
+
+        public bool CanTransitionTo(WorkOrderState newStatus)
+        {
+            return (State, newStatus) switch
+            {
+                (WorkOrderState.Scheduled, WorkOrderState.InProgress) => true,
+                (WorkOrderState.InProgress, WorkOrderState.Completed) => true,
+                (_, WorkOrderState.Cancelled) when State != WorkOrderState.Completed => true,
+                _ => false
+            };
+        }
+
+
+        
+        public Result<Updated> Cancel()
+        {
+            if (!CanTransitionTo(WorkOrderState.Cancelled))
+            {
+                return WorkOrderErrors.InvalidStateTransition(State, WorkOrderState.Cancelled);
+            }
+
+            State = WorkOrderState.Cancelled;
+            return Result.Updated;
+        }
+
+
+       
     }
 }
