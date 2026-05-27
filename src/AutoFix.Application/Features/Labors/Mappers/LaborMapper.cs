@@ -16,9 +16,9 @@ namespace AutoFix.Application.Features.Labors.Mappers
             return new LaborDto { LaborId = employee.Id, Name = employee.FullName };
         }
 
-        public static List<LaborDto> ToDtos(this IEnumerable<Employee> employees)
+        public static List<LaborDto> ToDtos(this IEnumerable<Employee> entities)
         {
-            return employees.Select(employee => employee.ToDto()).ToList();
+            return [.. entities.Select(l => l.ToDto())];
         }
     }
 }

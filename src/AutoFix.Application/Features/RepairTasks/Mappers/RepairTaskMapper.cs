@@ -4,28 +4,54 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoFix.Application.Features.RepairTasks.Dtos;
+using AutoFix.Domain.Common;
 using AutoFix.Domain.RepairTasks;
 using AutoFix.Domain.RepairTasks.Enums;
+using AutoFix.Domain.RepairTasks.Parts;
 
 namespace AutoFix.Application.Features.RepairTasks.Mappers
 {
     public static class RepairTaskMapper
     {
 
-        public static RepairTaskDto ToDto(this RepairTask task)
+        public static RepairTaskDto ToDto(this RepairTask entity)
         {
-          return  new RepairTaskDto
-            {
-               RepairTaskId=task.Id,
-               Name=task.Name,
-              EstimatedDurationInMins = task.EstimatedDurationInMins,
-              LaborCost=task.LaborCost,
-              Parts=task.Parts.Select(p=>p.ToDto()).ToList(),
+            ArgumentNullException.ThrowIfNull(entity);
 
-          };
+            return new RepairTaskDto
+            {
+               RepairTaskId= entity.Id,
+               Name= entity.Name,
+              EstimatedDurationInMins = entity.EstimatedDurationInMins,
+              LaborCost= entity.LaborCost,
+                Parts = entity.Parts.ToList().ConvertAll(ToDto)
+
+            };
 
 
             
     }
+        public static List<RepairTaskDto> ToDtos(this IEnumerable<RepairTask> entities)
+        {
+            return [.. entities.Select(e => e.ToDto())];
+        }
+
+        public static PartDto ToDto(this Part entity)
+        {
+            ArgumentNullException.ThrowIfNull(entity);
+
+            return new PartDto
+            {
+                PartId = entity.Id,
+                Name = entity.Name!,
+                Cost = entity.Cost,
+                Quantity = entity.Quantity
+            };
+        }
+
+        public static List<PartDto> ToDtos(this IEnumerable<Part> entities)
+        {
+            return [.. entities.Select(e => e.ToDto())];
+        }
     }
 }

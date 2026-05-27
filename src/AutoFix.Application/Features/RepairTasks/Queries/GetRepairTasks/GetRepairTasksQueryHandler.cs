@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoFix.Application.Common.Interfaces;
 using AutoFix.Application.Features.RepairTasks.Dtos;
+using AutoFix.Application.Features.RepairTasks.Mappers;
 using AutoFix.Domain.Common.Results;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -19,16 +20,7 @@ namespace AutoFix.Application.Features.RepairTasks.Queries.GetRepairTasks
         {
             var repairTasks = await _context.RepairTasks.Include(x => x.Parts).AsNoTracking().ToListAsync(ct);
 
-            return repairTasks.Select(x => new RepairTaskDto
-            {
-                RepairTaskId = x.Id,
-                Name = x.Name,
-                LaborCost = x.LaborCost,
-                EstimatedDurationInMins = x.EstimatedDurationInMins,
-
-                Parts = x.Parts.Select(p => new PartDto { Name = p.Name, Cost = p.Cost, Quantity = p.Quantity }).ToList()
-            }).ToList();
-
+            return repairTasks.ToDtos();
                 
         }
     }

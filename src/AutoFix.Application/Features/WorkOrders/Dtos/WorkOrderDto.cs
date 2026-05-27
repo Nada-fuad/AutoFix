@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoFix.Application.Features.Customers.Dtos;
+using AutoFix.Application.Features.Labors.Dtos;
 using AutoFix.Application.Features.RepairTasks.Dtos;
 using AutoFix.Domain.Employees;
 using AutoFix.Domain.WorkOrders.Enums;
@@ -13,17 +14,28 @@ namespace AutoFix.Application.Features.WorkOrders.Dtos
     public sealed record WorkOrderDto
     {
         public Guid WorkOrderId { get; set; }
-      
+        public Guid? InvoiceId { get; set; }
+        public Spot Spot { get; set; }
+
         public VehicleDto? Vehicle { get; set; }
 
         public string? CustomerName { get; set; }
         public DateTimeOffset StartAtUtc { get; set; }
         public DateTimeOffset EndAtUtc { get; set; }
         public List<RepairTaskDto> RepairTasks { get; set; } = [];
+        public LaborDto? Labor { get; set; }
+
         public WorkOrderState State { get; set; }
 
         public Guid? LaborId { get; set; }
-      
+        public int TotalDurationInMins { get; set; }
+        public decimal TotalCost { get; set; }
+        public decimal TotalLaborCost { get; set; }
+    public decimal TotalPartCost { get; set; }
+
+        public DateTimeOffset CreatedAt { get; set; }
+
+
 
     }
 }

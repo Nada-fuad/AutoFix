@@ -40,6 +40,23 @@ namespace AutoFix.Application.Common.Errors
         public static Error InvoiceNotFound => Error.NotFound(
       "ApplicationErrors.Invoice.NotFound",
       "Invoice does not exist.");
+
+       
+    public static readonly Error UserIdClaimInvalid = Error.Conflict(
+        code: "Auth.UserIdClaim.Invalid",
+        message: "Invalid userId claim.");
+
+        public static readonly Error RefreshTokenExpired = Error.Conflict(
+            code: "Auth.RefreshToken.Expired",
+            message: "Refresh token is invalid or has expired.");
+
+
+        public static readonly Error ExpiredAccessTokenInvalid = Error.Conflict(
+         code: "Auth.ExpiredAccessToken.Invalid",
+         message: "Expired access token is not valid.");
+
+
+
     }
 
 

@@ -23,7 +23,7 @@ namespace AutoFix.Application.Features.RepairTasks.Queries.GetRepairTaskById
         public async Task<Result<RepairTaskDto>> Handle(GetRepairTaskByIdQuery query, CancellationToken ct)
         {
 
-            var repairTask = await _context.RepairTasks.Include(x => x.Parts).FirstOrDefaultAsync(x=>x.Id== query.RepairTaskId, ct);
+            var repairTask = await _context.RepairTasks.AsNoTracking().Include(x => x.Parts).FirstOrDefaultAsync(x=>x.Id== query.RepairTaskId, ct);
 
             if (repairTask is null)
             {

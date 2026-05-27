@@ -22,8 +22,8 @@ namespace AutoFix.Application.Features.RepairTasks.Commands.RemoveRepairTask
 
         public async Task<Result<Deleted>> Handle(RemoveRepairTaskCommand command, CancellationToken ct)
         {
-            var taskRepairResult = await _context.RepairTasks.FindAsync(command.RepairTaskId, ct);
-            if (taskRepairResult is null) {
+            var repairTask = await _context.RepairTasks.FindAsync(command.RepairTaskId, ct);
+            if (repairTask is null) {
                 _logger.LogWarning("RepairTask {RepairTaskId} not found for deletion.", command.RepairTaskId);
                 return ApplicationErrors.RepairTaskNotFound;
             }
@@ -39,7 +39,7 @@ namespace AutoFix.Application.Features.RepairTasks.Commands.RemoveRepairTask
                 return RepairTaskErrors.InUse;
             }
 
-            _context.RepairTasks.Remove(taskRepairResult);
+            _context.RepairTasks.Remove(repairTask);
 
             await _context.SaveChangesAsync(ct);
             await _cache.RemoveByTagAsync("repair-task", ct);
