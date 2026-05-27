@@ -52,6 +52,7 @@ Content-Type: application/json
    "phoneNumber":"5999988775",
    "vehicles": [
     {
+      "vehicleId": "0fbe8c6f-61e8-429f-97b3-4185dfee04a2",
       "make": "Toyota",
       "model": "Camry",
       "year": 2020,
@@ -69,6 +70,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTgxYzRlN
 
 
 ######
+
+
+GET {{baseUrl}}/api/dashboard
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTgxYzRlNy1hYWMzLTRhYWMtYTQ5ZC02ZTRiMGJjMTM2NzkiLCJlbWFpbCI6InRlc3QxQHRlc3QuY29tIiwibmJmIjoxNzc5OTAwMDk0LCJleHAiOjE3Nzk5MDM2OTQsImlhdCI6MTc3OTkwMDA5NCwiaXNzIjoibG9jYWxob3N0IiwiYXVkIjoibG9jYWxob3N0In0.Gm-BrOEetVlayqe2Ei3Z6rNkPSqTeIDkdbXQRdDpzHA
+
 
 POST {{baseUrl}}/api/identity/login
 Content-Type: application/json
