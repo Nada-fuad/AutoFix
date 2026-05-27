@@ -6,86 +6,106 @@ using AutoFix.Application.Features.Customers.Dtos;
 using AutoFix.Application.Features.Customers.Queries.GetCustomerById;
 using AutoFix.Application.Features.Customers.Queries.GetCustomers;
 using AutoFix.Contracts.Requests.Customers;
+using AutoFix.Domain.Common.Results;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
+
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+
 
 namespace AutoFix.Api.Controllers
 {
     [ApiController]
     [Route("api/customers")]
-    public class CustomersController : ControllerBase
+    [Authorize]
+
+    public sealed class CustomersController(ISender sender) : ApiController
     {
 
-        private readonly IMediator _mediator;
 
-        public CustomersController(IMediator mediator) { _mediator = mediator; }
 
 
         [HttpGet]
         [ProducesResponseType(typeof(List<CustomerDto>),StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+
         [EndpointSummary("Retrieves a list of customers.")]
         [EndpointDescription("Returns all customers associated with the current user.")]
         [EndpointName("GetCustomers")]
         [ProducesDefaultResponseType]
+           [OutputCache(Duration = 60)]
 
-
-        public async Task<IActionResult> GetCustomers(CancellationToken ct)
+        public async Task<IActionResult> Get(CancellationToken ct)
         {
-            var customers = await _mediator.Send(new GetCustomersQuery(),ct);
-           
-            return Ok(customers);
+            var result = await sender.Send(new GetCustomersQuery(),ct);
+
+            return result.Match(response => Ok(response), Problem);
         }
+
+
+
+
+
+
 
         [HttpGet("{customerId:guid}",Name = "GetCustomerById")]
         [ProducesResponseType(typeof(CustomerDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         [EndpointSummary("Retrieves a customer by ID.")]
         [EndpointDescription("Returns detailed information about the specified customer if found.")]
         [EndpointName("GetCustomerById")]
+        [OutputCache(Duration = 60)]
+
 
         public async Task<IActionResult> GetCustomerById(Guid customerId,CancellationToken ct)
         {
-            var customer = await _mediator.Send(new GetCustomerByIdQuery(customerId));
-
-            if (customer.IsError)
-            {
-                return NotFound();
-            }
-            return Ok(customer.Value);
+            var result = await sender.Send(new GetCustomerByIdQuery(customerId));
+            return result.Match(
+                        response => Ok(response),
+                        Problem);
         }
 
         [HttpPost]
         [ProducesResponseType(typeof(CustomerDto),StatusCodes.Status201Created)]
-        [Consumes("application/json")]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         [EndpointSummary("Creates a new customer.")]
         [EndpointDescription("Adds a new customer to the system.")]
         [EndpointName("CreateCustomer")]
-        public async Task<IActionResult> CreateCustomer(CreateCustomerRequest request,CancellationToken ct)
+        public async Task<IActionResult> CreateCustomer([FromBody]CreateCustomerRequest request,CancellationToken ct)
         {
             var vehicles = request.Vehicles
            .ConvertAll(v => new CreateVehicleCommand(v.Make, v.Model, v.Year, v.LicensePlate));
-            var result = await _mediator.Send(
-                      new CreateCustomerCommand(
-                      request.Name,
-                       request.Email,
-                      request.PhoneNumber,
-                     
-                      vehicles),
-                      ct);
 
 
+            var result = await sender.Send(
+            new CreateCustomerCommand(
+            request.Name,
+           
+            request.Email,
+             request.PhoneNumber,
+            vehicles),
+            ct);
 
 
-            if (result.IsError)
-            {
-                return BadRequest(result.Errors);
+            return result.Match(
+            response => CreatedAtRoute(
+                routeName: "GetCustomerById",
+                routeValues: new { version = "1.0", customerId = response.CustomerId },
+                value: response),
+            Problem);
 
-            }
-            return Ok(result.Value);
+
         }
 
         [HttpPut("{customerId:guid}")]
         [ProducesResponseType(typeof(CustomerDto), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         [EndpointSummary("Updates an existing customer.")]
         [EndpointDescription("Updates a customer and its associated vehicle.")]
         [EndpointName("UpdateCustomer")]
@@ -97,15 +117,16 @@ namespace AutoFix.Api.Controllers
             var command = new UpdateCustomerCommand(
             customerId,
             request.Name,
-            request.PhoneNumber,
+           
             request.Email,
+             request.PhoneNumber,
             vehicles);
-            var result = await _mediator.Send(command,ct);
-            if (result.IsError)
-            {
-                return BadRequest(result.Errors);
-            }
-            return Ok(result.Value);
+            var result = await sender.Send(command,ct);
+
+
+            return result.Match(
+            response => Ok(response),
+            Problem);
 
         }
 
@@ -113,20 +134,20 @@ namespace AutoFix.Api.Controllers
         [HttpDelete("{customerId:guid}")]
 
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+
         [EndpointSummary("Removes a customer.")]
         [EndpointDescription("Deletes the specified customer from the system.")]
         [EndpointName("RemoveCustomer")]
         public async Task<IActionResult> Delete(Guid customerId,CancellationToken ct)
         {
 
-            var result = await _mediator.Send(new RemoveCustomerCommand(customerId),ct);
+            var result = await sender.Send(new RemoveCustomerCommand(customerId),ct);
 
-            if (result.IsError)
-            {
-                return BadRequest(result.Errors);
-            }
-            return Ok(result.Value);
+            return result.Match(
+          _ => NoContent(),
+          Problem);
 
         }
 

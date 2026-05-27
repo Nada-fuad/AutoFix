@@ -23,7 +23,7 @@ namespace AutoFix.Application.Features.Customers.Commands.UpdateCustomer
 
         public async Task<Result<Updated>> Handle(UpdateCustomerCommand command, CancellationToken ct)
         {
-            var customer = await _context.Customers.FirstOrDefaultAsync(x => x.Id == command.CustomerId,ct);
+            var customer = await _context.Customers.Include(c=>c.Vehicles).FirstOrDefaultAsync(x => x.Id == command.CustomerId,ct);
 
             if (customer is null)
             {

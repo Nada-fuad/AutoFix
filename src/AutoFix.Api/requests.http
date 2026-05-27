@@ -5,40 +5,45 @@
 
 ####
 GET {{baseUrl}}/api/customers
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTgxYzRlNy1hYWMzLTRhYWMtYTQ5ZC02ZTRiMGJjMTM2NzkiLCJlbWFpbCI6InRlc3QxQHRlc3QuY29tIiwibmJmIjoxNzc5OTAwMDk0LCJleHAiOjE3Nzk5MDM2OTQsImlhdCI6MTc3OTkwMDA5NCwiaXNzIjoibG9jYWxob3N0IiwiYXVkIjoibG9jYWxob3N0In0.Gm-BrOEetVlayqe2Ei3Z6rNkPSqTeIDkdbXQRdDpzHA
+
+
 
 
 ####
-GET {{baseUrl}}/api/customers/475e982d-0958-49a0-8e36-510cc9f0b327
-
+GET {{baseUrl}}/api/customers/ec34c9fe-e321-4e12-baa2-7d9c7a04a0ae
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTgxYzRlNy1hYWMzLTRhYWMtYTQ5ZC02ZTRiMGJjMTM2NzkiLCJlbWFpbCI6InRlc3QxQHRlc3QuY29tIiwibmJmIjoxNzc5OTAwMDk0LCJleHAiOjE3Nzk5MDM2OTQsImlhdCI6MTc3OTkwMDA5NCwiaXNzIjoibG9jYWxob3N0IiwiYXVkIjoibG9jYWxob3N0In0.Gm-BrOEetVlayqe2Ei3Z6rNkPSqTeIDkdbXQRdDpzHA
 
 ######
 
 POST {{baseUrl}}/api/customers
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTgxYzRlNy1hYWMzLTRhYWMtYTQ5ZC02ZTRiMGJjMTM2NzkiLCJlbWFpbCI6InRlc3QxQHRlc3QuY29tIiwibmJmIjoxNzc5OTAwMDk0LCJleHAiOjE3Nzk5MDM2OTQsImlhdCI6MTc3OTkwMDA5NCwiaXNzIjoibG9jYWxob3N0IiwiYXVkIjoibG9jYWxob3N0In0.Gm-BrOEetVlayqe2Ei3Z6rNkPSqTeIDkdbXQRdDpzHA
 Content-Type: application/json
 
 {
   "name": "ali3",
-  "email": "azzl5@gmail.com",
-  "phoneNumber": "5999988775",
+  "email": "lool4@gmail.com",
+  "phoneNumber": "4919923690",
   "vehicles": [
     {
       "make": "Toyota",
       "model": "Camry",
       "year": 2020,
-      "licensePlate": "ABC123"
+      "licensePlate": "ABC1423"
     },
     {
       "make": "BMW",
       "model": "X5",
       "year": 2022,
-      "licensePlate": "XYZ999"
+      "licensePlate": "XY6Z999"
     }
   ]
 }
 ######
 
 
-PUT {{baseUrl}}/api/customers/4071c843-29f9-4450-8f77-b0d640bc743f
+PUT {{baseUrl}}/api/customers/ec34c9fe-e321-4e12-baa2-7d9c7a04a0ae
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTgxYzRlNy1hYWMzLTRhYWMtYTQ5ZC02ZTRiMGJjMTM2NzkiLCJlbWFpbCI6InRlc3QxQHRlc3QuY29tIiwibmJmIjoxNzc5OTAwMDk0LCJleHAiOjE3Nzk5MDM2OTQsImlhdCI6MTc3OTkwMDA5NCwiaXNzIjoibG9jYWxob3N0IiwiYXVkIjoibG9jYWxob3N0In0.Gm-BrOEetVlayqe2Ei3Z6rNkPSqTeIDkdbXQRdDpzHA
 Content-Type: application/json
 
 {
@@ -58,7 +63,8 @@ Content-Type: application/json
 
 ###
  
-DELETE {{baseUrl}}/api/customers/79f186c9-0035-4e83-8998-2e9ab46760de
+DELETE {{baseUrl}}/api/customers/938b8c5b-7bc0-42cd-bd55-4686ee012b81
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTgxYzRlNy1hYWMzLTRhYWMtYTQ5ZC02ZTRiMGJjMTM2NzkiLCJlbWFpbCI6InRlc3QxQHRlc3QuY29tIiwibmJmIjoxNzc5OTAwMDk0LCJleHAiOjE3Nzk5MDM2OTQsImlhdCI6MTc3OTkwMDA5NCwiaXNzIjoibG9jYWxob3N0IiwiYXVkIjoibG9jYWxob3N0In0.Gm-BrOEetVlayqe2Ei3Z6rNkPSqTeIDkdbXQRdDpzHA
 
 
 

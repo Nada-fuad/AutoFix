@@ -37,6 +37,10 @@ namespace AutoFix.Domain.Customers
         {
             if (string.IsNullOrWhiteSpace(name)) { return CustomerErrors.NameRequired; }
             if (string.IsNullOrWhiteSpace(email)) { return CustomerErrors.EmailRequired; }
+            if (string.IsNullOrWhiteSpace(phoneNumber) || !Regex.IsMatch(phoneNumber, @"^\+?\d{7,15}$"))
+            {
+                return CustomerErrors.InvalidPhoneNumber;
+            }
 
             try
             {
@@ -47,7 +51,6 @@ namespace AutoFix.Domain.Customers
 
                 return CustomerErrors.EmailInvalid;
             }
-            if (string.IsNullOrWhiteSpace(phoneNumber) || !Regex.IsMatch(phoneNumber, @"^\+?\d{7,15}$")) { return CustomerErrors.PhoneNumberRequired; }
 
 
 
@@ -60,8 +63,10 @@ namespace AutoFix.Domain.Customers
 
             if (string.IsNullOrWhiteSpace(name)) { return CustomerErrors.NameRequired; }
             if (string.IsNullOrWhiteSpace(email)) { return CustomerErrors.EmailRequired; }
-            if (string.IsNullOrWhiteSpace(phoneNumber) || !Regex.IsMatch(phoneNumber, @"^\+?\d{7,15}$")) { return CustomerErrors.PhoneNumberRequired; }
-
+            if (string.IsNullOrWhiteSpace(phoneNumber) || !Regex.IsMatch(phoneNumber, @"^\+?\d{7,15}$"))
+            {
+                return CustomerErrors.InvalidPhoneNumber;
+            }
 
             Name = name;
             Email = email;
