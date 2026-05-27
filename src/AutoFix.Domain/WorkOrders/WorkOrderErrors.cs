@@ -45,6 +45,11 @@ namespace AutoFix.Domain.WorkOrders
        code: "WorkOrderErrors.InvalidStateTransition",
        message: $"WorkOrder Invalid State transition from '{current}' to '{next}'.");
 
+         
+        public static Error StateTransitionNotAllowed(DateTimeOffset startAtUtc) => Error.Conflict(
+      code: "WorkOrderErrors.StateTransitionNotAllowed",
+      message: $"State transition is not allowed before the work order’s scheduled start time {startAtUtc:yyyy-MM-dd HH:mm} UTC.");
+
 
     }
 }

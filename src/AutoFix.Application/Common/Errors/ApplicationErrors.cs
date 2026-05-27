@@ -56,10 +56,32 @@ namespace AutoFix.Application.Common.Errors
          message: "Expired access token is not valid.");
 
 
+        public static Error LaborOccupied =>
+    Error.Conflict(
+           "Employee.LaborOccupied",
+           "Labor is already occupied during the requested time.");
 
+
+        public static Error WorkOrderOutsideOperatingHour(DateTimeOffset startAtUtc, DateTimeOffset endAtUtc) =>
+    Error.Conflict(
+           "ApplicationErrors.WorkOrder.Outside.OperatingHours",
+           $"The WorkOrder time ({startAtUtc} ? {endAtUtc}) is outside of store operating hours.");
+
+
+
+
+        public static Error VehicleNotFound =>
+    Error.NotFound(
+           "ApplicationErrors.Vehicle.NotFound",
+           "Vehicle does not exist.");
+
+        public static Error VehicleSchedulingConflict =>
+    Error.Conflict(
+            "Vehicle_Overlapping_WorkOrder",
+            "The vehicle already has an overlapping WorkOrder.");
     }
 
 
 
- 
-    }
+
+}

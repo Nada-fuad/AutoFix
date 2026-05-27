@@ -3,10 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoFix.Domain.Common.Results;
+using AutoFix.Domain.WorkOrders.Enums;
 
 namespace AutoFix.Application.Common.Interfaces
 {
-    internal class IWorkOrderPolicy
+   public interface IWorkOrderPolicy
     {
+        bool IsOutsideOperatingHours(DateTimeOffset startAt, TimeSpan duration);
+
+        Task<bool> IsLaborOccupied(Guid laborId, Guid excludedWorkOrderId, DateTimeOffset startAt, DateTimeOffset endAt);
+
+        Task<bool> IsVehicleAlreadyScheduled(Guid vehicleId, DateTimeOffset startAt, DateTimeOffset endAt, Guid? excludedWorkOrderId = null);
+
+        Task<Result<Success>> CheckSpotAvailabilityAsync(Spot spot, DateTimeOffset startAt, DateTimeOffset endAt, Guid? excludeWorkOrderId = null, CancellationToken ct = default);
+
+        Result<Success> ValidateMinimumRequirement(DateTimeOffset startAt, DateTimeOffset endAt);
     }
 }

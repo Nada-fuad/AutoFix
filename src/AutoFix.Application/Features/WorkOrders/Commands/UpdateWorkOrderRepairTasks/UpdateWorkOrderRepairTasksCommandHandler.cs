@@ -8,16 +8,18 @@ using AutoFix.Application.Common.Interfaces;
 using AutoFix.Domain.Common.Results;
 using AutoFix.Domain.RepairTasks;
 using AutoFix.Domain.WorkOrders;
+using AutoFix.Domain.WorkOrders.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace AutoFix.Application.Features.WorkOrders.Commands.UpdateWorkOrderRepairTasks
 {
-    public class UpdateWorkOrderRepairTasksCommandHandler(IAppDbContext context ,ILogger<UpdateWorkOrderRepairTasksCommandHandler> logger) : IRequestHandler<UpdateWorkOrderRepairTasksCommand, Result<Updated>>
+    public class UpdateWorkOrderRepairTasksCommandHandler(IAppDbContext context ,ILogger<UpdateWorkOrderRepairTasksCommandHandler> logger,IWorkOrderPolicy workOrderPolicy) : IRequestHandler<UpdateWorkOrderRepairTasksCommand, Result<Updated>>
     {
         private readonly IAppDbContext _context = context;
         private readonly ILogger<UpdateWorkOrderRepairTasksCommandHandler> _logger = logger;
+        private readonly IWorkOrderPolicy _workOrderValidator = workOrderPolicy;
 
         public async Task<Result<Updated>> Handle(UpdateWorkOrderRepairTasksCommand command, CancellationToken ct)
         {
@@ -66,7 +68,42 @@ namespace AutoFix.Application.Features.WorkOrders.Commands.UpdateWorkOrderRepair
                     return addRepairTaskResult;
                 }
             }
-            await _context.SaveChangesAsync(ct);
+
+
+            var totalDuration = TimeSpan.FromMinutes(requestedTasks.Sum(x => (int)x.EstimatedDurationInMins));
+
+            var newEndAt = workOrder.StartAtUtc + totalDuration;
+
+            // Business validations
+            if (_workOrderValidator.IsOutsideOperatingHours(workOrder.StartAtUtc, totalDuration))
+            {
+                return Error.Conflict("WorkOrder_Outside_OperatingHours", "WorkOrder timing exceeds business hours.");
+            }
+
+            var spotCheckResult = await _workOrderValidator.CheckSpotAvailabilityAsync(
+                workOrder.Spot,
+                workOrder.StartAtUtc,
+                newEndAt,
+                excludeWorkOrderId: workOrder.Id,
+                ct: ct);
+
+            if (spotCheckResult.IsError)
+            {
+                return spotCheckResult.Errors;
+            }
+
+            if (await _workOrderValidator.IsLaborOccupied(workOrder.LaborId!.Value, workOrder.Id, workOrder.StartAtUtc, newEndAt))
+            {
+                return ApplicationErrors.LaborOccupied;
+            }
+
+            workOrder.UpdateTiming(workOrder.StartAtUtc, newEndAt);
+
+            workOrder.AddDomainEvent(new WorkOrderCollectionModified());
+
+            await context.SaveChangesAsync(ct);
+
+            workOrder.AddDomainEvent(new WorkOrderCollectionModified());
 
             return Result.Updated;
         }

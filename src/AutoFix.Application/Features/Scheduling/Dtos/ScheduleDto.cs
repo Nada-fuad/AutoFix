@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace AutoFix.Application.Features.Scheduling.Dtos
 {
-    internal class ScheduleDto
+    public class ScheduleDto
     {
+        public DateOnly OnDate { get; set; }
+        public bool EndOfDay { get; set; }
+        public List<SpotDto> Spots { get; set; } = [];
     }
 }

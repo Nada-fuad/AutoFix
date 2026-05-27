@@ -74,6 +74,9 @@ namespace AutoFix.Infrastructure
 
             services.AddScoped<IInvoicePdfGenerator, InvoicePdfGenerator>();
 
+            services.AddScoped<IWorkOrderPolicy, WorkOrderPolicy>();
+
+
             return services;
         }
 

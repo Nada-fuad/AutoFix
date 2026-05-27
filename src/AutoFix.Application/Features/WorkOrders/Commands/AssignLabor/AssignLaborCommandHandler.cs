@@ -9,13 +9,16 @@ using AutoFix.Domain.Common.Results;
 using AutoFix.Domain.WorkOrders;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Logging;
 
 namespace AutoFix.Application.Features.WorkOrders.Commands.AssignLabor
 {
-    public class AssignLaborCommandHandler(IAppDbContext context,ILogger<AssignLaborCommandHandler> logger) : IRequestHandler<AssignLaborCommand, Result<Updated>>
+    public class AssignLaborCommandHandler(IAppDbContext context,ILogger<AssignLaborCommandHandler> logger,HybridCache cache, IWorkOrderPolicy workOrderValidator) : IRequestHandler<AssignLaborCommand, Result<Updated>>
     {
         private readonly IAppDbContext _context = context;
+        private readonly HybridCache _cache = cache;
+        private readonly IWorkOrderPolicy _workOrderValidator = workOrderValidator;
 
         public ILogger<AssignLaborCommandHandler> _logger { get; } = logger;
 
@@ -36,7 +39,11 @@ namespace AutoFix.Application.Features.WorkOrders.Commands.AssignLabor
                 return ApplicationErrors.LaborNotFound;
             }
 
-
+            if (await _workOrderValidator.IsLaborOccupied(command.LaborId, command.WorkOrderId, workOrder.StartAtUtc, workOrder.EndAtUtc))
+            {
+                _logger.LogError("Labor with Id '{LaborId}' is already occupied during the requested time.", workOrder.LaborId);
+                return ApplicationErrors.LaborOccupied;
+            }
 
             var updateLaborResult = workOrder.UpdateLabor(command.LaborId);
 
@@ -50,6 +57,9 @@ namespace AutoFix.Application.Features.WorkOrders.Commands.AssignLabor
                 return updateLaborResult.Errors;
             }
             await _context.SaveChangesAsync(ct);
+
+            await _cache.RemoveByTagAsync("work-order", ct);
+
 
             return Result.Updated;
         }
