@@ -1,9 +1,12 @@
 ﻿using AutoFix.Application.Common.Models;
+using AutoFix.Application.Features.Scheduling.Dtos;
+using AutoFix.Application.Features.Scheduling.Queries.GetDailyScheduleQuery;
 using AutoFix.Application.Features.WorkOrders.Commands.AssignLabor;
 using AutoFix.Application.Features.WorkOrders.Commands.CreateWorkOrder;
 using AutoFix.Application.Features.WorkOrders.Commands.RecolateWorkOrder;
 using AutoFix.Application.Features.WorkOrders.Commands.UpdateWorkOrder;
 using AutoFix.Application.Features.WorkOrders.Commands.UpdateWorkOrderRepairTasks;
+using AutoFix.Application.Features.WorkOrders.Commands.UpdateWorkOrderState;
 using AutoFix.Application.Features.WorkOrders.Dtos;
 using AutoFix.Application.Features.WorkOrders.Queries.GetWorkOrderById;
 using AutoFix.Application.Features.WorkOrders.Queries.GetWorkOrders;
@@ -118,92 +121,150 @@ namespace AutoFix.Api.Controllers
 
 
 
-
-        
-        [HttpDelete("{workOrderId:guid}")]
-
-        public async Task<IActionResult> Delete(Guid workOrderId)
-        {
-
-            var command= new DeleteWorkOrderCommand(workOrderId);
-
-            var result= await sender.Send(command);
-            if (result.IsError)
-            {
-                return BadRequest(result.Errors);
-            }
-            return Ok(result.Value);
-
-        }
-
-
-        [HttpGet("{workOrderId:guid}")]
-
-        public async Task<IActionResult> GetById(Guid workOrderId)
-        {
-            var command= new GetWorkOrderByIdQuery(workOrderId);
-
-            var result = await sender.Send(command);
-
-            if (result.IsError)
-            {
-                return BadRequest(result.Errors);
-            }
-            return Ok(result.Value);
-
-        }
-
-
-        [HttpPut("{workorderId:guid}/repairtasks")]
-
-        public async Task<IActionResult> UpdateRepairTasks(Guid workOrderId,[FromBody]Guid[] repairTaskIds)
-        {
-            var command = new UpdateWorkOrderRepairTasksCommand(workOrderId, repairTaskIds);
-
-            var result = await sender.Send(command);
-
-            if (result.IsError)
-            {
-                return BadRequest(result.Errors);
-            }
-            return Ok(result.Value);
-
-        }
-
-
-        [HttpPut("{workOrderId:Guid}/labor/{laborId:guid}")]
-
-        public async Task<IActionResult> AssignLabor(Guid workOrderId ,Guid laborId
-            )
-        {
-            var command = new AssignLaborCommand(workOrderId,laborId);
-
-            var result = await sender.Send(command);
-
-            if (result.IsError)
-            {
-                return BadRequest(result.Errors);
-            }
-            return Ok(result.Value);
-        }
-
         [HttpPut("{workOrderId:guid}/relocation")]
-
-
-        public async Task<IActionResult> RecolateWorkOrder(Guid workOrderId,RelocateWorkOrderRequest request ,   CancellationToken ct)
+        [Authorize(Policy = "ManagerOnly")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        [EndpointSummary("Relocates a work order to a new time and spot.")]
+        [EndpointDescription("Updates the scheduled time and assigned bay for a work order. Only users with the Manager role can perform this action.")]
+        [EndpointName("RescheduleWorkOrder")]
+        public async Task<IActionResult> Relocate(Guid workOrderId, RelocateWorkOrderRequest request, CancellationToken ct)
         {
+            var command = new RelocateWorkOrderCommand(
+                workOrderId,
+                request.NewStartAtUtc,
+                (Spot)(int)request.NewSpot);
 
-            var command = new RelocateWorkOrderCommand(workOrderId,request.NewStartAtUtc,(Spot)(int)request.NewSpot);
+            var result = await sender.Send(command, ct);
 
-
-
-            var result= await sender.Send(command,ct);  
-
-            if (result.IsError) {
-
-                return BadRequest(result.Errors);
-            }
-            return Ok(result.Value);
+            return result.Match(
+                _ => NoContent(),
+                Problem);
         }
+
+        [HttpPut("{workOrderId:guid}/labor")]
+     
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        [EndpointSummary("Assigns a labor to a work order.")]
+        [EndpointDescription("Associates a labor definition with a specific work order. Only managers can perform this operation.")]
+        [EndpointName("AssignLaborToWorkOrder")]
+        public async Task<IActionResult> AssignLabor(Guid workOrderId, AssignLaborRequest request, CancellationToken ct)
+        {
+            var command = new AssignLaborCommand(workOrderId, Guid.Parse(request.LaborId));
+
+            var result = await sender.Send(command, ct);
+
+            return result.Match(
+                _ => NoContent(),
+                Problem);
+        }
+
+        [HttpPut("{workOrderId:guid}/state")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        [EndpointSummary("Changes the state of a work order.")]
+        [EndpointDescription("Updates the current state of the specified work order. Only users with the Manager role are authorized.")]
+        [EndpointName("UpdateWorkOrderState")]
+        public async Task<IActionResult> UpdateState(Guid workOrderId, UpdateWorkOrderStateRequest request, CancellationToken ct)
+        {
+            var command = new UpdateWorkOrderStateCommand(
+                workOrderId,
+                (WorkOrderState)(int)request.State);
+
+            var result = await sender.Send(command, ct);
+
+            return result.Match(
+                _ => NoContent(),
+                Problem);
+        }
+
+        [HttpPut("{workOrderId:guid}/repair-task")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateRepairTasks(Guid workOrderId, ModifyRepairTaskRequest request, CancellationToken ct)
+        {
+            var command = new UpdateWorkOrderRepairTasksCommand(workOrderId, request.RepairTaskIds);
+
+            var result = await sender.Send(command, ct);
+
+            return result.Match(
+                _ => NoContent(),
+                Problem);
+        }
+
+        [HttpDelete("{workOrderId:guid}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        [EndpointSummary("Deletes a work order.")]
+        [EndpointDescription("Deletes the specified work order permanently. Only users with the Manager role are authorized.")]
+        [EndpointName("DeleteWorkOrder")]
+        public async Task<IActionResult> Delete(Guid workOrderId, CancellationToken ct)
+        {
+            var result = await sender.Send(new DeleteWorkOrderCommand(workOrderId), ct);
+
+            return result.Match(
+                 _ => NoContent(),
+                 Problem);
+        }
+
+        [HttpGet("schedule/{date}")]
+        [Authorize]
+        [ProducesResponseType(typeof(ScheduleDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        [EndpointSummary("Retrieves the schedule for a given day.")]
+        [EndpointDescription("Returns a schedule view for the specified date. If no date is provided, today's schedule is returned. You can optionally filter by labor ID.")]
+        [EndpointName("GetDailySchedule")]
+        public async Task<IActionResult> GetSchedule(
+      DateOnly? date,
+      [FromQuery] Guid? laborId,
+      [FromHeader(Name = "X-TimeZone")] string? tz,
+      CancellationToken ct)
+        {
+            if (string.IsNullOrWhiteSpace(tz))
+            {
+                return Problem(
+                    detail: "Missing time zone in 'X-TimeZone' header.",
+                    statusCode: StatusCodes.Status400BadRequest,
+                    title: "Time Zone Required");
+            }
+
+            TimeZoneInfo timeZone;
+
+            try
+            {
+                timeZone = TimeZoneInfo.FindSystemTimeZoneById(tz);
+            }
+            catch
+            {
+                return Problem(
+                    detail: $"Invalid or unknown time zone: '{tz}'.",
+                    statusCode: StatusCodes.Status400BadRequest,
+                    title: "Invalid Time Zone");
+            }
+
+            var scheduleDate = date ?? DateOnly.FromDateTime(DateTime.UtcNow);
+
+            var result = await sender.Send(new GetDailyScheduleQuery(timeZone, scheduleDate, laborId), ct);
+
+            return result.Match(
+                response => Ok(response),
+                Problem);
+        }
+
+
+
+
+
+
+
     }
     }

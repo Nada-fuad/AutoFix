@@ -6,7 +6,5 @@ using System.Threading.Tasks;
 
 namespace AutoFix.Contracts.Responses
 {
-    internal class OperatingHoursResponse
-    {
-    }
+    public sealed record OperatingHoursResponse(TimeOnly OpeningTime, TimeOnly ClosingTime);
 }

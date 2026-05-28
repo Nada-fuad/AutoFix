@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace AutoFix.Contracts.Requests.WorkOrders
 {
-    internal class ModifyRepairTaskRequest
+   public class ModifyRepairTaskRequest
     {
+        public Guid[] RepairTaskIds { get; set; } = [];
+
     }
 }

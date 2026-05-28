@@ -179,11 +179,14 @@ Content-Type: application/json
 GET {{baseUrl}}/api/workorders?page=1&pagesize=1
 Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTgxYzRlNy1hYWMzLTRhYWMtYTQ5ZC02ZTRiMGJjMTM2NzkiLCJlbWFpbCI6InRlc3QxQHRlc3QuY29tIiwibmJmIjoxNzc5OTY2NTY5LCJleHAiOjE3Nzk5NzAxNjgsImlhdCI6MTc3OTk2NjU2OSwiaXNzIjoibG9jYWxob3N0IiwiYXVkIjoibG9jYWxob3N0In0.fmlHmYCeXjV1kCEZN0JTu4b_8xNOL_8oV8G4c0GuJAk
 ####
-GET {{baseUrl}}/api/workorders/9d334905-8126-4a0a-beb2-641b03938e92h
+GET {{baseUrl}}/api/workorders/76d6878a-1ed8-4f71-8eed-53e391d40253
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTgxYzRlNy1hYWMzLTRhYWMtYTQ5ZC02ZTRiMGJjMTM2NzkiLCJlbWFpbCI6InRlc3QxQHRlc3QuY29tIiwibmJmIjoxNzc5OTY2NTY5LCJleHAiOjE3Nzk5NzAxNjgsImlhdCI6MTc3OTk2NjU2OSwiaXNzIjoibG9jYWxob3N0IiwiYXVkIjoibG9jYWxob3N0In0.fmlHmYCeXjV1kCEZN0JTu4b_8xNOL_8oV8G4c0GuJAk
 
 
 ####
 POST {{baseUrl}}/api/workorders
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTgxYzRlNy1hYWMzLTRhYWMtYTQ5ZC02ZTRiMGJjMTM2NzkiLCJlbWFpbCI6InRlc3QxQHRlc3QuY29tIiwibmJmIjoxNzc5OTY2NTY5LCJleHAiOjE3Nzk5NzAxNjgsImlhdCI6MTc3OTk2NjU2OSwiaXNzIjoibG9jYWxob3N0IiwiYXVkIjoibG9jYWxob3N0In0.fmlHmYCeXjV1kCEZN0JTu4b_8xNOL_8oV8G4c0GuJAk
+
 Content-Type: application/json
 
 {
@@ -196,7 +199,27 @@ Content-Type: application/json
     
 }
 
+######
+PUT {{baseUrl}}/api/workorders/..//relocation
+
+
 ####
+
+
+PUT {{baseUrl}}/api/workorders/.../labor
+
+
+
+#####
+PUT {{baseUrl}}/api/workorders/.../state
+
+######
+
+
+ PUT {{baseUrl}}/api/workorders/.../repair-task
+ 
+ 
+########
 DELETE {{baseUrl}}/api/workorders/9d334905-8126-4a0a-beb2-641b03938e92
 
 
