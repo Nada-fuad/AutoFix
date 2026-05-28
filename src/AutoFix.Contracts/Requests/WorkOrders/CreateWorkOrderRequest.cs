@@ -4,12 +4,17 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoFix.Contracts.Common;
 
 namespace AutoFix.Contracts.Requests.WorkOrders
 {
     public class CreateWorkOrderRequest
     {
 
+
+        [Required(ErrorMessage = "Spot is required.")]
+        [Range(0, 3, ErrorMessage = "Invalid range [0, 1, 2 or 3]")]
+        public Spot Spot { get; set; }
 
         [Required(ErrorMessage = "Vehicle is required.")]
         public Guid VehicleId { get; set; }

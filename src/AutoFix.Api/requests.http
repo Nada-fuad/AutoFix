@@ -104,12 +104,12 @@ GET {{baseUrl}}/api/repair-tasks
 Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTgxYzRlNy1hYWMzLTRhYWMtYTQ5ZC02ZTRiMGJjMTM2NzkiLCJlbWFpbCI6InRlc3QxQHRlc3QuY29tIiwibmJmIjoxNzc5OTYwMTY5LCJleHAiOjE3Nzk5NjM3NjksImlhdCI6MTc3OTk2MDE2OSwiaXNzIjoibG9jYWxob3N0IiwiYXVkIjoibG9jYWxob3N0In0.wL6ETL-28hfBrW1ioLrE1j6cwgfE545NqfgsaP9s8Cs
 
 ####
-GET {{baseUrl}}/api/repair-tasks/0dbe214b-a5b0-4e89-98bf-ffcb6421d388
+GET {{baseUrl}}/api/repair-tasks/0b2c46ba-3fa3-41a6-9806-14d5c214ebb9
 Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTgxYzRlNy1hYWMzLTRhYWMtYTQ5ZC02ZTRiMGJjMTM2NzkiLCJlbWFpbCI6InRlc3QxQHRlc3QuY29tIiwibmJmIjoxNzc5OTYwMTY5LCJleHAiOjE3Nzk5NjM3NjksImlhdCI6MTc3OTk2MDE2OSwiaXNzIjoibG9jYWxob3N0IiwiYXVkIjoibG9jYWxob3N0In0.wL6ETL-28hfBrW1ioLrE1j6cwgfE545NqfgsaP9s8Cs
 
 
 ####
-POST {{baseUrl}}/api/repairtasks
+POST {{baseUrl}}/api/repair-tasks
 Content-Type: application/json
 {
   "name": "Oil Change",
@@ -131,10 +131,11 @@ Content-Type: application/json
 
 
 ####
-POST {{baseUrl}}/api/repairtasks
+POST {{baseUrl}}/api/repair-tasks
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTgxYzRlNy1hYWMzLTRhYWMtYTQ5ZC02ZTRiMGJjMTM2NzkiLCJlbWFpbCI6InRlc3QxQHRlc3QuY29tIiwibmJmIjoxNzc5OTYwMTY5LCJleHAiOjE3Nzk5NjM3NjksImlhdCI6MTc3OTk2MDE2OSwiaXNzIjoibG9jYWxob3N0IiwiYXVkIjoibG9jYWxob3N0In0.wL6ETL-28hfBrW1ioLrE1j6cwgfE545NqfgsaP9s8Cs
 Content-Type: application/json
 {
-  "name": "Oil Change",
+  "name": "Oill Change",
   "laborCost": 100,
   "estimatedDurationInMins": 30,
   "parts": [
@@ -148,11 +149,14 @@ Content-Type: application/json
 }
 
 ###
-DELETE {{baseUrl}}/api/repairtask/3b4d3ced-5976-4a2c-82e9-3579fedcd4e7
+DELETE {{baseUrl}}/api/repair-tasks/0b2c46ba-3fa3-41a6-9806-14d5c214ebb9
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTgxYzRlNy1hYWMzLTRhYWMtYTQ5ZC02ZTRiMGJjMTM2NzkiLCJlbWFpbCI6InRlc3QxQHRlc3QuY29tIiwibmJmIjoxNzc5OTYwMTY5LCJleHAiOjE3Nzk5NjM3NjksImlhdCI6MTc3OTk2MDE2OSwiaXNzIjoibG9jYWxob3N0IiwiYXVkIjoibG9jYWxob3N0In0.wL6ETL-28hfBrW1ioLrE1j6cwgfE545NqfgsaP9s8Cs
+
 
 
 ###
-PUT {{baseUrl}}/api/repairtask/cbf91b79-35a5-40c8-8302-ef9ec31bc3fb
+PUT {{baseUrl}}/api/repair-tasks/0b2c46ba-3fa3-41a6-9806-14d5c214ebb9
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTgxYzRlNy1hYWMzLTRhYWMtYTQ5ZC02ZTRiMGJjMTM2NzkiLCJlbWFpbCI6InRlc3QxQHRlc3QuY29tIiwibmJmIjoxNzc5OTYwMTY5LCJleHAiOjE3Nzk5NjM3NjksImlhdCI6MTc3OTk2MDE2OSwiaXNzIjoibG9jYWxob3N0IiwiYXVkIjoibG9jYWxob3N0In0.wL6ETL-28hfBrW1ioLrE1j6cwgfE545NqfgsaP9s8Cs
 Content-Type: application/json
 
 
@@ -170,11 +174,12 @@ Content-Type: application/json
 }
 
 
+
 ####
-GET {{baseUrl}}/api/repairtask/cbf91b79-35a5-40c8-8302-ef9ec31bc3fb
-
-
-
+GET {{baseUrl}}/api/workorders?page=1&pagesize=1
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTgxYzRlNy1hYWMzLTRhYWMtYTQ5ZC02ZTRiMGJjMTM2NzkiLCJlbWFpbCI6InRlc3QxQHRlc3QuY29tIiwibmJmIjoxNzc5OTY2NTY5LCJleHAiOjE3Nzk5NzAxNjgsImlhdCI6MTc3OTk2NjU2OSwiaXNzIjoibG9jYWxob3N0IiwiYXVkIjoibG9jYWxob3N0In0.fmlHmYCeXjV1kCEZN0JTu4b_8xNOL_8oV8G4c0GuJAk
+####
+GET {{baseUrl}}/api/workorders/9d334905-8126-4a0a-beb2-641b03938e92h
 
 
 ####
@@ -194,9 +199,6 @@ Content-Type: application/json
 ####
 DELETE {{baseUrl}}/api/workorders/9d334905-8126-4a0a-beb2-641b03938e92
 
-
-####
-GET {{baseUrl}}/api/workorders/9d334905-8126-4a0a-beb2-641b03938e92h
 
 
 ####
