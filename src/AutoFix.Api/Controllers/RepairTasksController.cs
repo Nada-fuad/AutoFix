@@ -5,37 +5,39 @@ using AutoFix.Application.Features.RepairTasks.Dtos;
 using AutoFix.Application.Features.RepairTasks.Queries.GetRepairTaskById;
 using AutoFix.Application.Features.RepairTasks.Queries.GetRepairTasks;
 using AutoFix.Contracts.Requests.RepairTasks;
+using AutoFix.Domain.Common.Results;
 using AutoFix.Domain.RepairTasks.Enums;
 using AutoFix.Infrastructure.Migrations;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 using System.Linq;
 namespace AutoFix.Api.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class RepairTasksController(ISender sender) : ControllerBase
+    [Route("api/repair-tasks")]
+    [Authorize]
+    public class RepairTasksController(ISender sender) : ApiController
     {
 
 
 
         [HttpGet]
         [ProducesResponseType(typeof(List<RepairTaskDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         [EndpointSummary("Retrieves all repair tasks.")]
         [EndpointDescription("Returns a list of all repair tasks available in the system.")]
         [EndpointName("GetRepairTasks")]
-
+       
+        [OutputCache(Duration = 60)]
         public async Task<IActionResult> Get(CancellationToken ct)
         {
-            var repairTasks = await sender.Send(new GetRepairTasksQuery(), ct);
-            if (repairTasks.IsError)
-            {
-                return NotFound();
-            }
-            return Ok(repairTasks);
+            var result = await sender.Send(new GetRepairTasksQuery(), ct);
+            return result.Match(
+              response => Ok(response),
+              Problem);
         }
 
 
@@ -44,24 +46,27 @@ namespace AutoFix.Api.Controllers
 
         [HttpGet("{repairTaskId:guid}", Name = nameof(GetById))]
         [ProducesResponseType(typeof(RepairTaskDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         [EndpointSummary("Retrieves a repair task by ID.")]
         [EndpointDescription("Returns detailed information for the specified repair task if it exists.")]
         [EndpointName("GetRepairTaskById")]
+        [OutputCache(Duration = 60)]
         public async Task<IActionResult> GetById(Guid repairTaskId,CancellationToken ct)
         {
-            var repairTask = await sender.Send(new GetRepairTaskByIdQuery(repairTaskId),ct);
-            if (repairTask is null)
-            {
-                return NotFound();
-            }
+            var result = await sender.Send(new GetRepairTaskByIdQuery(repairTaskId), ct);
 
-            return Ok(repairTask);
+            return result.Match(
+                response => Ok(response),
+                Problem);
         }
 
 
 
         [HttpPost]
         [ProducesResponseType(typeof(RepairTaskDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         [EndpointSummary("Creates a new repair task.")]
         [EndpointDescription("Creates a repair task and optionally includes parts.")]
         [EndpointName("CreateRepairTask")]
@@ -78,22 +83,22 @@ namespace AutoFix.Api.Controllers
                 parts);
 
             var result = await sender.Send(command, ct);
-            if (result.IsError)
-            {
-                return BadRequest(result.Errors);
-
-            }
-            return Ok(result.Value);
+            return result.Match(
+            response => CreatedAtAction(nameof(GetById), new { repairTaskId = response.RepairTaskId }, response),
+            Problem);
 
         }
 
 
 
-       
 
 
-        [HttpPut("{repairTaskId:Guid}")]
+
+        [HttpPut("{repairTaskId:guid}")]
         [ProducesResponseType(typeof(RepairTaskDto), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         [EndpointSummary("Updates an existing repair task.")]
         [EndpointDescription("Updates a repair task and its associated parts.")]
         [EndpointName("UpdateRepairTask")]
@@ -101,17 +106,21 @@ namespace AutoFix.Api.Controllers
         public async Task<IActionResult> Update(Guid repairTaskId, [FromBody] UpdateRepairTaskRequest request, CancellationToken ct)
         {
             var parts = request.Parts
-                      .ConvertAll(p => new UpdateRepairTaskPartCommand(p.PartId, p.Name, p.Cost, p.Quantity));
+           .ConvertAll(p => new UpdateRepairTaskPartCommand(p.PartId, p.Name, p.Cost, p.Quantity))
+;
 
+            var command = new UpdateRepairTaskCommand(
+                repairTaskId,
+                request.Name,
+                request.LaborCost,
+                (RepairDurationInMinutes)request.EstimatedDurationInMins,
+                parts);
 
-            var command= new UpdateRepairTaskCommand(repairTaskId,request.Name,request.LaborCost,(RepairDurationInMinutes)request.EstimatedDurationInMins,parts);
+            var result = await sender.Send(command, ct);
 
-            var result= await sender.Send(command,ct);
-            if (result.IsError)
-            {
-                return BadRequest(result.Errors);
-            }
-            return Ok(result.Value);
+            return result.Match(
+                response => Ok(response),
+                Problem);
 
         }
 
@@ -120,20 +129,19 @@ namespace AutoFix.Api.Controllers
 
         [HttpDelete("{repairTaskId:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         [EndpointSummary("Removes a repair task.")]
         [EndpointDescription("Deletes the specified repair task from the system.")]
         [EndpointName("RemoveRepairTask")]
 
-        public async Task<IActionResult> Delete(Guid repairTaskId)
+        public async Task<IActionResult> Delete(Guid repairTaskId,CancellationToken ct)
         {
-            var repairTask = new RemoveRepairTaskCommand(repairTaskId);
-            var result = await sender.Send(repairTask);
-            if (result.IsError)
-            {
-                return BadRequest(result.Errors);
+            var result = await sender.Send(new RemoveRepairTaskCommand(repairTaskId), ct);
 
-            }
-            return Ok(result.Value);
+            return result.Match(
+          _ => NoContent(),
+          Problem);
 
         }
 

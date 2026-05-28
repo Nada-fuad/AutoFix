@@ -99,8 +99,13 @@ Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTgxYzRlNy
 
 
 
+####
+GET {{baseUrl}}/api/repair-tasks
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTgxYzRlNy1hYWMzLTRhYWMtYTQ5ZC02ZTRiMGJjMTM2NzkiLCJlbWFpbCI6InRlc3QxQHRlc3QuY29tIiwibmJmIjoxNzc5OTYwMTY5LCJleHAiOjE3Nzk5NjM3NjksImlhdCI6MTc3OTk2MDE2OSwiaXNzIjoibG9jYWxob3N0IiwiYXVkIjoibG9jYWxob3N0In0.wL6ETL-28hfBrW1ioLrE1j6cwgfE545NqfgsaP9s8Cs
 
-
+####
+GET {{baseUrl}}/api/repair-tasks/0dbe214b-a5b0-4e89-98bf-ffcb6421d388
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTgxYzRlNy1hYWMzLTRhYWMtYTQ5ZC02ZTRiMGJjMTM2NzkiLCJlbWFpbCI6InRlc3QxQHRlc3QuY29tIiwibmJmIjoxNzc5OTYwMTY5LCJleHAiOjE3Nzk5NjM3NjksImlhdCI6MTc3OTk2MDE2OSwiaXNzIjoibG9jYWxob3N0IiwiYXVkIjoibG9jYWxob3N0In0.wL6ETL-28hfBrW1ioLrE1j6cwgfE545NqfgsaP9s8Cs
 
 
 ####
@@ -169,8 +174,6 @@ Content-Type: application/json
 GET {{baseUrl}}/api/repairtask/cbf91b79-35a5-40c8-8302-ef9ec31bc3fb
 
 
-####
-GET {{baseUrl}}/api/repairtasks
 
 
 
