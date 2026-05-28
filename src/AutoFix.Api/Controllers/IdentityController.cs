@@ -1,8 +1,10 @@
 ﻿using System.Security.Claims;
 using AutoFix.Application.Common.Interfaces;
+using AutoFix.Application.Features.Identity;
 using AutoFix.Application.Features.Identity.Dtos;
 using AutoFix.Application.Features.Identity.Queries.GenerateTokens;
 using AutoFix.Application.Features.Identity.Queries.GetUserInfo;
+using AutoFix.Application.Features.Identity.Queries.ResfreshTokens;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.Data;
@@ -11,32 +13,53 @@ using Microsoft.AspNetCore.Mvc;
 namespace AutoFix.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class IdentityController(ISender sender) : ControllerBase
+    [Route("identity")]
+    public class IdentityController(ISender sender) :ApiController
     {
       
           
         
-        [HttpPost("login")]
-        public async Task<IActionResult> Login(GenerateTokenQuery request, CancellationToken ct)
+        [HttpPost("token/generate")]
+        [ProducesResponseType(typeof(TokenResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        [EndpointSummary("Generates an access and refresh token for a valid user.")]
+        [EndpointDescription("Authenticates a user using provided credentials and returns a JWT token pair.")]
+        [EndpointName("GenerateToken")]
+        public async Task<IActionResult> GenerateToken([FromBody]GenerateTokenQuery request, CancellationToken ct)
         {
             
             var result= await sender.Send(request, ct);
-
-            if (result.IsError)
-            {
-                return BadRequest(result.Errors);
-            }
-
-            return Ok(result.Value);
+            return result.Match(
+                        response => Ok(response),
+                        Problem);
 
         }
+
+        [HttpPost("token/refresh-token")]
+        [ProducesResponseType(typeof(TokenResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        [EndpointSummary("Refreshes access token using a valid refresh token.")]
+        [EndpointDescription("Exchanges an expired access token and a valid refresh token for a new token pair.")]
+        [EndpointName("RefreshToken")]
+        [ProducesResponseType(typeof(TokenResponse), StatusCodes.Status200OK)]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenQuery request, CancellationToken ct)
+        {
+            var result = await sender.Send(request, ct);
+            return result.Match(
+                response => Ok(response),
+                Problem);
+        }
+
 
 
         [HttpGet("current-user/claims")]
         [Authorize]
        [ProducesResponseType(typeof(AppUserDto), StatusCodes.Status200OK)]
-       [EndpointSummary("Gets the current authenticated user's info.")]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        [EndpointSummary("Gets the current authenticated user's info.")]
         [EndpointDescription("Returns user information for the currently authenticated user based on the access token.")]
         [EndpointName("GetCurrentUserClaims")]
         public async Task<IActionResult> GetCurrentUserInfo(CancellationToken ct)
@@ -44,13 +67,9 @@ namespace AutoFix.Api.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var result = await sender.Send(new GetUserByIdQuery(userId), ct);
-
-            if (result.IsError)
-            {
-                return BadRequest(result.Errors);
-            }
-
-            return Ok(result.Value);
+            return result.Match(
+                       response => Ok(response),
+                       Problem);
         }
 
     

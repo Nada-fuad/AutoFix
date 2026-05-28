@@ -30,7 +30,7 @@ namespace AutoFix.Application.Features.Identity.Queries.ResfreshTokens
 
                 return ApplicationErrors.ExpiredAccessTokenInvalid;
             }
-
+            
             var userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (userId is null)

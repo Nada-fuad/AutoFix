@@ -10,6 +10,8 @@ using AutoFix.Application.Common.Interfaces;
 using AutoFix.Application.Features.Identity;
 using AutoFix.Application.Features.Identity.Dtos;
 using AutoFix.Domain.Common.Results;
+using AutoFix.Domain.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -95,15 +97,36 @@ namespace AutoFix.Infrastructure.Identity
             var tokenHandler = new JwtSecurityTokenHandler();
 
             var securityToken = tokenHandler.CreateToken(descriptor);
+            var oldRefreshTokens = await _context.RefreshTokens
+             .Where(rt => rt.UserId == user.UserId)
+             .ExecuteDeleteAsync(ct);
+            var refreshTokenResult = RefreshToken.Create(
+           Guid.NewGuid(),
+           GenerateRefreshToken(),
+           user.UserId,
+           DateTime.UtcNow.AddDays(7));
 
+            if (refreshTokenResult.IsError)
+            {
+                return refreshTokenResult.Errors;
+            }
+
+            var refreshToken = refreshTokenResult.Value;
+            _context.RefreshTokens.Add(refreshToken);
 
             await _context.SaveChangesAsync(ct);
 
             return new TokenResponse
             {
                 AccessToken = tokenHandler.WriteToken(securityToken),
+                RefreshToken = refreshToken.Token,
+
                 ExpiresOnUtc = expires
             };
+        }
+        private static string GenerateRefreshToken()
+        {
+            return Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
         }
 
     }

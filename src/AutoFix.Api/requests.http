@@ -72,11 +72,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTgxYzRlN
 ######
 
 
-GET {{baseUrl}}/api/dashboard
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTgxYzRlNy1hYWMzLTRhYWMtYTQ5ZC02ZTRiMGJjMTM2NzkiLCJlbWFpbCI6InRlc3QxQHRlc3QuY29tIiwibmJmIjoxNzc5OTAwMDk0LCJleHAiOjE3Nzk5MDM2OTQsImlhdCI6MTc3OTkwMDA5NCwiaXNzIjoibG9jYWxob3N0IiwiYXVkIjoibG9jYWxob3N0In0.Gm-BrOEetVlayqe2Ei3Z6rNkPSqTeIDkdbXQRdDpzHA
+GET {{baseUrl}}/api/dashboard/stats
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTgxYzRlNy1hYWMzLTRhYWMtYTQ5ZC02ZTRiMGJjMTM2NzkiLCJlbWFpbCI6InRlc3QxQHRlc3QuY29tIiwibmJmIjoxNzc5OTA1ODA4LCJleHAiOjE3Nzk5MDk0MDgsImlhdCI6MTc3OTkwNTgwOCwiaXNzIjoibG9jYWxob3N0IiwiYXVkIjoibG9jYWxob3N0In0.prWXs_5F1DxWw-cgutwFJyg5UBN21_U3yiUAiJiuUV8
+####
 
 
-POST {{baseUrl}}/api/identity/login
+POST {{baseUrl}}/identity/token/generate
 Content-Type: application/json
 
 {
@@ -84,10 +85,17 @@ Content-Type: application/json
   "password": "Test123"
 }
 
+#####
 
+POST {{baseUrl}}/identity/token/refresh-token
+Content-Type: application/json
+{
+    "refreshToken":"ZrfCsBHPca4+2pVnCdHavRKzlx6OsDezK9hJvHA5GyE=",
+    "expiredAccessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTgxYzRlNy1hYWMzLTRhYWMtYTQ5ZC02ZTRiMGJjMTM2NzkiLCJlbWFpbCI6InRlc3QxQHRlc3QuY29tIiwibmJmIjoxNzc5OTU3NTU3LCJleHAiOjE3Nzk5NjExNTcsImlhdCI6MTc3OTk1NzU1NywiaXNzIjoibG9jYWxob3N0IiwiYXVkIjoibG9jYWxob3N0In0.O8tAwSOzlCCQwpC_jQ_eHyB1VaYbwJL4Ecefn53WhY8"
+}
 ####
-GET {{baseUrl}}/api/identity/current-user/claims
-Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTgxYzRlNy1hYWMzLTRhYWMtYTQ5ZC02ZTRiMGJjMTM2NzkiLCJlbWFpbCI6InRlc3QxQHRlc3QuY29tIiwibmJmIjoxNzc4OTQ0Mjg1LCJleHAiOjE3Nzg5NDc4ODUsImlhdCI6MTc3ODk0NDI4NSwiaXNzIjoibG9jYWxob3N0IiwiYXVkIjoibG9jYWxob3N0In0.9wjoRAAF0G3pAvmiqhSGWT2Od42348MRVKuGTOGbQ48
+GET {{baseUrl}}/identity/current-user/claims
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTgxYzRlNy1hYWMzLTRhYWMtYTQ5ZC02ZTRiMGJjMTM2NzkiLCJlbWFpbCI6InRlc3QxQHRlc3QuY29tIiwibmJmIjoxNzc5OTU1ODE0LCJleHAiOjE3Nzk5NTk0MTQsImlhdCI6MTc3OTk1NTgxNCwiaXNzIjoibG9jYWxob3N0IiwiYXVkIjoibG9jYWxob3N0In0.iQ3hxsWDKK6sBx0IOIM52YrGCPUgANa4W3Pbcx7ZpMM
 
 
 
