@@ -19,7 +19,7 @@ namespace AutoFix.Api.Controllers
 {
     [ApiController]
     [Route("api/customers")]
-    [Authorize]
+    //[Authorize]
 
     public sealed class CustomersController(ISender sender) : ApiController
     {

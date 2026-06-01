@@ -32,7 +32,7 @@ namespace AutoFix.Application.Common.Behaviours
                     return innerResult;
                 }
 
-                return default!;
+                return innerResult!;
             }, options: new HybridCacheEntryOptions
             {
                 Expiration = cachedRequest.Expiration,

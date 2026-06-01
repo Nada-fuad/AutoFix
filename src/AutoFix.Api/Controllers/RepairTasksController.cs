@@ -18,7 +18,7 @@ using System.Linq;
 namespace AutoFix.Api.Controllers
 {
     [Route("api/repair-tasks")]
-    [Authorize]
+    //[Authorize]
     public class RepairTasksController(ISender sender) : ApiController
     {
 
